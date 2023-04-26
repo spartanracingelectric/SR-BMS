@@ -83,7 +83,7 @@ GenerateClassCluster=0
 DocumentUniqueId=DAYASJNG
 
 [Document3]
-DocumentPath=bmsSlave_main.SchDoc
+DocumentPath=bmsMaster_usb.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -97,7 +97,7 @@ ClassGenCCAutoRoomEnabled=0
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=PITOHZHI
+DocumentUniqueId=FHVEVRHV
 
 [Configuration1]
 Name=Sources
