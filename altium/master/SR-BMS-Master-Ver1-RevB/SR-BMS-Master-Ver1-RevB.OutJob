@@ -2,15 +2,15 @@
 Version=1.0
 
 [PublishSettings]
-OutputFilePath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\.PDF
+OutputFilePath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\Schematics\.PDF
 ReleaseManaged2=0
-OutputBasePath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\
+OutputBasePath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\Schematics\
 OutputPathMedia2=
 OutputPathMediaValue2=
 OutputPathOutputer2=[Output Type]
 OutputPathOutputerPrefix2=
 OutputPathOutputerValue2=
-OutputFileName2=SR-BMS-Master-Ver1-RevB-PRE1.pdf
+OutputFileName2=SR-BMS-Master-Ver1-RevB-PRE2.pdf
 OutputFileNameMulti2=
 UseOutputNameForMulti2=1
 OutputFileNameSpecial2=
@@ -81,7 +81,7 @@ WmvVideoCodecName4=Windows Media Video V7
 WmvQuality4=80
 
 [GeneratedFilesSettings]
-RelativeOutputPath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\.PDF
+RelativeOutputPath2=C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\Schematics\.PDF
 OpenOutputs2=1
 RelativeOutputPath3=
 OpenOutputs3=1
