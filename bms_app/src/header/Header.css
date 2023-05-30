@@ -1,0 +1,85 @@
+.App-Header
+{
+	height: 10vh;
+	display: flex;
+	flex-direction: row;
+	background-color: #5f9ea0;
+}
+
+.Logo
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.Title-Logo
+{
+	width: 60vh;
+	text-align: center;
+	
+	font-size: 30px;
+	font-weight: 500;
+	font-family: 'sans-serif';
+	color: black;
+}
+
+.Settings
+{
+	height: 15vh;
+	display: flex;
+	flex-direction: column;
+	align-items: right;
+	justify-content: center;
+}
+
+.Settings-Logo
+{
+	flex: 1;
+	min-width: 175vh;
+	height: 5vh;
+	
+	font-size: 20px;
+	font-weight: 500;
+	font-family: 'sans-serif';
+	color: black;
+	text-align: right;
+}
+
+.Tabs
+{
+	flex: 2;
+	height: 10vh;
+	
+	display: flex;
+	flex-direction: row-reverse;
+	text-align: right;
+	font-size: 15px;
+	font-weight: 300;
+}
+
+.General
+{
+	width: 15vh;
+}
+
+.CellManagement
+{
+	width: 30vh;
+}
+
+.Switch
+{
+	width: 15vh;
+}
+
+.Signals
+{
+	width: 15vh;
+}
+
+.Display
+{
+	width: 15vh;
+}

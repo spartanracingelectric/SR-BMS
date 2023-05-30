@@ -1,0 +1,23 @@
+.BDA
+{
+	display: flex;
+	flex-direction: row;
+}
+
+.Info
+{
+	width: 20%;
+	height: 25%;
+	
+	display: flex;
+	flex-direction: row;
+	
+	background-color: tan;
+}
+
+.InfoComp
+{
+	display: flex;
+	flex-direction: column;
+	font-size: 15px;
+}

@@ -1,0 +1,54 @@
+.App 
+{
+	min-height: 100vh;
+  	background-color: #5f9ea0;
+}
+
+.Body
+{
+	display: flex;
+	flex-direction: column;
+}
+
+.Buttons
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.Connection
+{
+	width: 240px;
+	height: 25px;
+	font-size: 15px;
+}
+
+.Firmware
+{
+	width: 240px;
+	height: 25px;
+	font-size: 15px;
+}
+
+.DA
+{
+	width: 240px;
+	height: 25px;
+	font-size: 15px;
+}
+
+.Terminal
+{
+	width: 240px;
+	height: 25px;
+	font-size: 15px;
+}
+
+.DC
+{
+	width: 240px;
+	height: 25px;
+	font-size: 15px;
+}
