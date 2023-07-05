@@ -18,6 +18,12 @@ ChartJS.register(
 )
 
 function BarGraph() {
+{/* 
+	2 ways to display data:
+		1. have 3 seperate tabs for each graph
+		2. display all 3 in one graph
+			- can hide datasets to only display one at a time
+*/}
 	const data = {
 		labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 		datasets: [ 
