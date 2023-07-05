@@ -20,7 +20,7 @@ ChartJS.register(
 function BarGraph() {
 {/* 
 	
-	link: 
+	link: https://www.youtube.com/watch?v=svJRmxrPUFw
 	2 ways to display data:
 		1. have 3 seperate tabs for each graph
 		2. display all 3 in one graph
