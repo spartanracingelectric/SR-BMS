@@ -15,17 +15,6 @@ import BarGraph from './BarGraph.js';
 function Graphs() {
 	return (
 		<div className = "Graphs" >
-			&nbsp;
-			<div className = "GraphTabs">
-				&nbsp;
-				&nbsp;
-				<button className = "CV"> Cell Voltage </button>
-				&nbsp;
-				<button className = "Temps"> Temperatures </button>
-				&nbsp;
-				<button className = "IV"> IV </button>
-			</div>
-			&nbsp;
 			<BarGraph />
 		</div> 
 	);
