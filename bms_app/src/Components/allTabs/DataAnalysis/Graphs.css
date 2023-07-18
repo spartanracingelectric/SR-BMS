@@ -1,27 +1,10 @@
 .Graphs
 {
 	width: 50%;
-	height: 50%;
+	height: 60%;
 	
 	display: flex;
 	flex-direction: column;
 	
 	background-color: tan;
-}
-.GraphTabs
-{
-	display: flex;
-	flex-direction: row;
-}
-.CV
-{
-	width: 20%;
-}
-.Temps
-{
-	width: 20%;
-}
-.IV
-{
-	width: 20%;
 }

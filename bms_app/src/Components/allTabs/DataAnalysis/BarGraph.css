@@ -1,0 +1,31 @@
+.Graph
+{
+	width: 95%;
+	height: 50%;
+	
+	background-color: tan;
+}
+.GraphTabs
+{
+	display: flex;
+	flex-direction: row;
+}
+.CV
+{
+	width: 20%;
+}
+.Temps
+{
+	width: 20%;
+}
+.IV
+{
+	width: 20%;
+}
+.Refresh
+{
+	width: 30%;
+	
+	background-color: red;
+	border-color: red;
+}
