@@ -18,7 +18,7 @@ ChartJS.register(
 	Legend
 )
 
-function BarGraph ()
+function BarGraph ({UpdateData})
 {
 
 const [barData, setBarData] = useState ({
@@ -169,14 +169,15 @@ const changeState3 = () => {
 				&nbsp;
 				&nbsp;
 				&nbsp;
-				<button className = "Refresh" > Refresh </button>
+				<button className = "Refresh" onClick={UpdateData}> Refresh </button>
 			</div>
 			&nbsp;
         			<Bar data={barData} options={options} />
+        		&nbsp;
         		&nbsp;
         	</div>
 	);
 }
 
 
-export default (BarGraph);
+export default BarGraph;

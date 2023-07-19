@@ -1,7 +1,9 @@
 .Graph
 {
-	width: 95%;
+	width: 50%;
 	height: 50%;
+	
+	padding: 10px;
 	
 	background-color: tan;
 }

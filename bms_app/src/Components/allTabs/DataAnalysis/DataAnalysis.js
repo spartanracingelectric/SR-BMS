@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import './DataAnalysis.css';
-import Graphs from './Graphs.js';
+import BarGraph from './BarGraph.js';
 
 function DataTitles() {
 	return(
@@ -29,23 +29,28 @@ function DataTitles() {
 	);
 }
 
+let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
 function DataAnalysis() {
+	
+	/*
+		Data array = [Vpack, Cpack, Ppack, CVhigh,
+			CVavg, CVlow, Cmismatch, TBhigh, TBavg,
+			TBlow, Vload, Pload, Vcharger, Pcharger]
+			
+		Note: try changing array values using serial communication first 
+			before trying to change graph values
+	*/
+	
+	const [BData, SetData] = useState(initialData);
 
-	var Vpack = (3.00).toFixed(2);
-	var Cpack = (0.00).toFixed(2);
-	var Ppack = (1.00).toFixed(2);
-	var CVhigh = (2.00).toFixed(2);
-	var CVavg = (2.00).toFixed(2);
-	var CVlow = (1.00).toFixed(2);
-	var Cmismatch = (2.00).toFixed(2);
-	var TBhigh = (1.00).toFixed(2);
-	var TBavg = (3.00).toFixed(2);
-	var TBlow = (0.00).toFixed(2);
-	var Vload = (1.00).toFixed(2);
-	var Pload = (1.00).toFixed(2);
-	var Vcharger = (2.00).toFixed(2);
-	var Pcharger = (3.00).toFixed(2);
-
+	function UpdateData() {
+		 const newData = [(3.00).toFixed(2), (0.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2),
+		(2.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (1.00).toFixed(2), (3.00).toFixed(2),
+		(0.00).toFixed(2), (1.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (3.00).toFixed(2)]
+		
+		SetData(newData);
+	}
 
 	return (
 		<div className = "BDA">
@@ -60,30 +65,30 @@ function DataAnalysis() {
 					maybe load data from a json file?
 				*/}
 					&nbsp;
-					<text>{Vpack} V</text>
-					<text>{Cpack} A</text>
-					<text>{Ppack} W</text>
-					<text>{CVhigh} V</text>
-					<text>{CVavg} V</text>
-					<text>{CVlow} V</text>
-					<text>{Cmismatch} V</text>
+					<text>{BData[0]} V</text>
+					<text>{BData[1]} A</text>
+					<text>{BData[2]} W</text>
+					<text>{BData[3]} V</text>
+					<text>{BData[4]} V</text>
+					<text>{BData[5]} V</text>
+					<text>{BData[6]} V</text>
 					&nbsp;
 					&nbsp;
-					<text>{TBhigh} C</text>
-					<text>{TBavg} C</text>
-					<text>{TBlow} C</text>
+					<text>{BData[7]} C</text>
+					<text>{BData[8]} C</text>
+					<text>{BData[9]} C</text>
 					&nbsp;
 					&nbsp;
-					<text>{Vload} V</text>
-					<text>{Pload} W</text>
-					<text>{Vcharger} V</text>
-					<text>{Pcharger} W</text>
+					<text>{BData[10]} V</text>
+					<text>{BData[11]} W</text>
+					<text>{BData[12]} V</text>
+					<text>{BData[13]} W</text>
 				</div>
 			</div>
 			&nbsp;
 			&nbsp;
 			&nbsp;
-			<Graphs />
+			<BarGraph UpdateData = {UpdateData}/>
 		</div>
 	);
 }
