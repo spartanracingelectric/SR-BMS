@@ -4,6 +4,8 @@ import BarGraph from './BarGraph.js';
 import DataTitles from './StaticData.js';
 
 let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
 
 function DataAnalysis() {
 	/*
@@ -13,7 +15,6 @@ function DataAnalysis() {
 	*/
 	const [Vdata, setVdata] = useState (initialData);
 	const [Idata, setIdata] = useState (initialData);
-	const [IVdata, setIVdata] = useState (initialData);
 	
 	// barData and options hold the displayed graph data
 	const [barData, setBarData] = useState ({
@@ -81,7 +82,7 @@ function DataAnalysis() {
 	const changeState1 = () => {
 		setBarData(barData => {
 			return{
-				labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+				labels: cellGroups,
 				datasets: [{
 					label: 'Voltage',
 					data: Vdata,
@@ -100,6 +101,13 @@ function DataAnalysis() {
 									...options.scales.y.title,
 										text: 'Voltage (V)'
 								}
+						},
+						x: {
+							...options.scales.x,
+							title: {
+								...options.scales.x.title,
+								text: 'Cell Size'
+							}
 						}
 				}
 			}
@@ -109,7 +117,7 @@ function DataAnalysis() {
 	const changeState2 = () => {
 		setBarData(barData => {
 			return{
-				labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+				labels: cellGroups,
 				datasets: [{
 					label: 'Temperature',
 					data: Idata,
@@ -126,8 +134,15 @@ function DataAnalysis() {
 							...options.scales.y,
 								title: {
 									...options.scales.y.title,
-										text: 'Temperature'
+										text: 'Temperature (C)'
 								}
+						},
+						x: {
+							...options.scales.x,
+							title: {
+								...options.scales.x.title,
+								text: 'Cell Size'
+							}
 						}
 				}
 			}
@@ -137,10 +152,10 @@ function DataAnalysis() {
 	const changeState3 = () => {
 		setBarData(barData => {
 			return{
-				labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+				labels: Vdata,
 				datasets: [{
 					label: 'IV',
-					data: IVdata,
+					data: Idata,
 					backgroundColor: 'lightgreen'
 				}]
 			}
@@ -179,16 +194,10 @@ function DataAnalysis() {
 		const n2Data = [Math.floor(Math.random() * 5), 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1];
 		setIdata(n2Data);
 	}
-	
-	function UpdateIV() {
-		const n3Data = [Math.floor(Math.random() * 5), 1, 2, -3, 1, -2, 3, 1, 2, -3];
-		setIVdata(n3Data);
-	}
 
 	function Refresh() {
 		UpdateVoltage();
 		UpdateCurrent();
-		UpdateIV();
 		
 		UpdateData();
 	}
