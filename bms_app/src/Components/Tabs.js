@@ -9,9 +9,9 @@ const TabPage = () => (
 	<Tabs>
 		<TabList>
 			{/*Add Tabs here, presented in order*/}
+			<Tab> DataAnalysis </Tab>
 			<Tab> Connection </Tab>
 			<Tab> Firmware </Tab>
-			<Tab> DataAnalysis </Tab>
 			<Tab> Terminal </Tab>
 			<Tab> Debug Console </Tab>
 		</TabList>
@@ -23,15 +23,15 @@ const TabPage = () => (
 		*/}
 		
 		<TabPanel>
+      			<DataAnalysis />
+    		</TabPanel>
+		
+		<TabPanel>
       			<Connection />
     		</TabPanel>
     		
     		<TabPanel>
       			{/*Firmware*/}
-    		</TabPanel>
-    		
-    		<TabPanel>
-      			<DataAnalysis />
     		</TabPanel>
     		
     		<TabPanel>

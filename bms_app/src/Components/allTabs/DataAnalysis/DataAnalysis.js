@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import './DataAnalysis.css';
 import BarGraph from './BarGraph.js';
 import DataTitles from './StaticData.js';
+import StateButton from './StateButtons.js';
 
 let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
 
 function DataAnalysis() {
 	/*
@@ -14,6 +14,7 @@ function DataAnalysis() {
 		Note: not sure if we need IVdata if we have Voltage and Current data
 	*/
 	const [Vdata, setVdata] = useState (initialData);
+	const [Tdata, setTdata] = useState (initialData);
 	const [Idata, setIdata] = useState (initialData);
 	
 	// barData and options hold the displayed graph data
@@ -78,111 +79,6 @@ function DataAnalysis() {
 		
 		SetData(newData);
 	}
-
-	const changeState1 = () => {
-		setBarData(barData => {
-			return{
-				labels: cellGroups,
-				datasets: [{
-					label: 'Voltage',
-					data: Vdata,
-					backgroundColor: 'white'
-				}]
-			}
-		});
-		setOptions(options => {
-			return{ 
-				...options,
-				scales: {
-					...options.scales,
-						y: {
-							...options.scales.y,
-								title: {
-									...options.scales.y.title,
-										text: 'Voltage (V)'
-								}
-						},
-						x: {
-							...options.scales.x,
-							title: {
-								...options.scales.x.title,
-								text: 'Cell Size'
-							}
-						}
-				}
-			}
-		});
-	}
-
-	const changeState2 = () => {
-		setBarData(barData => {
-			return{
-				labels: cellGroups,
-				datasets: [{
-					label: 'Temperature',
-					data: Idata,
-					backgroundColor: 'darkgreen'
-				}]
-			}
-		});
-		setOptions(options => {
-			return{ 
-				...options,
-				scales: {
-					...options.scales,
-						y: {
-							...options.scales.y,
-								title: {
-									...options.scales.y.title,
-										text: 'Temperature (C)'
-								}
-						},
-						x: {
-							...options.scales.x,
-							title: {
-								...options.scales.x.title,
-								text: 'Cell Size'
-							}
-						}
-				}
-			}
-		});
-	}
-
-	const changeState3 = () => {
-		setBarData(barData => {
-			return{
-				labels: Vdata,
-				datasets: [{
-					label: 'IV',
-					data: Idata,
-					backgroundColor: 'lightgreen'
-				}]
-			}
-		});
-		setOptions(options => {
-			return{ 
-				...options,
-				scales: {
-					...options.scales,
-						y: {
-							...options.scales.y,
-								title: {
-									...options.scales.y.title,
-										text: 'Current (i)'
-								}
-						},
-						x: {
-							...options.scales.x,
-							title: {
-								...options.scales.x.title,
-								text: 'Voltage (V)'
-							}
-						}
-				}
-			}
-		});	
-	}
 	
 	
 	function UpdateVoltage() {
@@ -190,14 +86,20 @@ function DataAnalysis() {
 		setVdata(n1Data);
 	}
 	
-	function UpdateCurrent() {
+	function UpdateTemperature() {
 		const n2Data = [Math.floor(Math.random() * 5), 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1];
-		setIdata(n2Data);
+		setTdata(n2Data);
+	}
+	
+	function UpdateCurrent() {
+		const n3Data = [Math.floor(Math.random() * 5), 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2];
+		setIdata(n3Data);
 	}
 
 	function Refresh() {
 		UpdateVoltage();
 		UpdateCurrent();
+		UpdateTemperature();
 		
 		UpdateData();
 	}
@@ -207,39 +109,32 @@ function DataAnalysis() {
 			&nbsp;
 			<div className = "Info">
 				&nbsp;
-				<DataTitles />
-				&nbsp;
-				<div className = "Data">
-				{/*
-					display bms data here
-					maybe load data from a json file?
-				*/}
-					&nbsp;
-					<text>{BData[0]} V</text>
-					<text>{BData[1]} A</text>
-					<text>{BData[2]} W</text>
-					<text>{BData[3]} V</text>
-					<text>{BData[4]} V</text>
-					<text>{BData[5]} V</text>
-					<text>{BData[6]} V</text>
-					&nbsp;
-					&nbsp;
-					<text>{BData[7]} C</text>
-					<text>{BData[8]} C</text>
-					<text>{BData[9]} C</text>
-					&nbsp;
-					&nbsp;
-					<text>{BData[10]} V</text>
-					<text>{BData[11]} W</text>
-					<text>{BData[12]} V</text>
-					<text>{BData[13]} W</text>
-				</div>
+				<DataTitles BData = {BData}/>
 			</div>
 			&nbsp;
 			&nbsp;
 			&nbsp;
-			<BarGraph Refresh = {Refresh} changeState1 = {changeState1} changeState2 = {changeState2} 
-				changeState3 = {changeState3} barData = {barData} options = {options}/>
+			<div className = "Graph">
+				&nbsp;
+				&nbsp;
+				<div className = "GraphTabs">
+					<StateButton bName = {'Cell Voltage'} barData = {barData} setBarData = {setBarData} 
+						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Vdata} 	
+						dTitle = {'Voltage'} bgColor = {'white'} yTitle = {'Voltage (V)'} xTitle = {'Cell Size'}/>
+					<StateButton bName = {'Temperature'} barData = {barData} setBarData = {setBarData} 
+						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Tdata} 
+						dTitle = {'Temperature'} bgColor = {'darkgreen'} yTitle = {'Temperature (C)'} 
+						xTitle = {'Cell Size'}/>
+					<StateButton bName = {'IV'} barData = {barData} setBarData = {setBarData} options = {options} 
+						setOptions = {setOptions} cellGroups = {Vdata} gData = {Idata} dTitle = {'IV'} 
+						bgColor = {'lightgreen'} yTitle = {'Current (I)'} xTitle = {'Voltage'}/>
+					&nbsp;
+        				&nbsp;
+        				<button className = "Refresh" onClick={Refresh}> Refresh </button>
+				</div>
+				&nbsp;
+					<BarGraph barData = {barData} options = {options}/>
+			</div>
 		</div>
 	);
 }

@@ -1,6 +1,21 @@
+.StaticBlock
+{
+	display: flex;
+	flex-direction: row;
+}
+
 .InfoComp
 {
 	display: flex;
 	flex-direction: column;
+	font-size: 15px;
+}
+
+.Data
+{
+	display: flex;
+	flex-direction: column;
+	
+	padding: 0 13px 0;
 	font-size: 15px;
 }

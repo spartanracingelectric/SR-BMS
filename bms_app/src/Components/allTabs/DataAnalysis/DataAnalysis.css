@@ -15,11 +15,27 @@
 	background-color: tan;
 }
 
-.Data
+.Graph
+{
+	justify-Content: center;	
+	
+	width: 50%;
+	height: 50%;
+	
+	padding: 10px;
+	
+	background-color: tan;
+}
+.GraphTabs
 {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+}
+.Refresh
+{
+	width: 50%;
+	height: 50%;
 	
-	padding: 0 13px 0;
-	font-size: 15px;
+	background-color: red;
+	border-color: red;
 }
