@@ -2,11 +2,14 @@
 React GUI code base
 
 Note:
+
 -after cloning repository open bms_app then 
 install the react scripts using the following
 command: npm install react-scripts
 otherwise you cannot run app on local host
+
 Note:
+
 -to use the backend you must run both the backend and frontend parts simultaneously
 -frontend: open terminal in bms_app folder => use "npm start" command
 -backend: open terminal in serialcomm foler => use "npm run dev" command 
