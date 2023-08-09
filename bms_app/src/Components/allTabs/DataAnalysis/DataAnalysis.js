@@ -8,6 +8,10 @@ let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 function DataAnalysis() {
+	
+	//holds string value fetched from server 8000 from server.js in serial comm
+	const [message, setMessage] = useState("");
+
 	/*
 		Vdata, Idata, IVdata hold the graph data for the BMS
 		Refresh() updates these states
@@ -61,6 +65,7 @@ function DataAnalysis() {
 		}
 	});
 	
+	
 	/*
 		Data array = [Vpack, Cpack, Ppack, CVhigh,
 			CVavg, CVlow, Cmismatch, TBhigh, TBavg,
@@ -72,7 +77,7 @@ function DataAnalysis() {
 	
 	const [BData, SetData] = useState(initialData);
 
-	function UpdateData() {
+	const UpdateData = async () => {
 		 const newData = [(3.00).toFixed(2), (0.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2),
 		(2.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (1.00).toFixed(2), (3.00).toFixed(2),
 		(0.00).toFixed(2), (1.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (3.00).toFixed(2)]
@@ -81,27 +86,40 @@ function DataAnalysis() {
 	}
 	
 	
-	function UpdateVoltage() {
+	const UpdateVoltage = async () => {
 		const n1Data = [Math.floor(Math.random() * 5), 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3];
 		setVdata(n1Data);
 	}
 	
-	function UpdateTemperature() {
+	const UpdateTemperature = async () => {
 		const n2Data = [Math.floor(Math.random() * 5), 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1];
 		setTdata(n2Data);
 	}
 	
-	function UpdateCurrent() {
+	const UpdateCurrent = async () => {
 		const n3Data = [Math.floor(Math.random() * 5), 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2];
 		setIdata(n3Data);
 	}
+	
+	const Backend = async () => {
+		const response = await fetch("http://localhost:8000/message", {
+        		method: 'GET',
+        		headers: {
+        		},
+      		});
+      		
+      		const result = await response.json();
+      		setMessage(JSON.stringify(result, null, 4));
+	}
 
-	function Refresh() {
+	const Refresh = async () => {
 		UpdateVoltage();
 		UpdateCurrent();
 		UpdateTemperature();
 		
 		UpdateData();
+		
+		Backend();
 	}
 
 	return (
@@ -117,6 +135,7 @@ function DataAnalysis() {
 			<div className = "Graph">
 				&nbsp;
 				&nbsp;
+				<text> {message} </text>
 				<div className = "GraphTabs">
 					<StateButton bName = {'Cell Voltage'} barData = {barData} setBarData = {setBarData} 
 						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Vdata} 	
