@@ -13,6 +13,7 @@ Note:
 	- backend: open terminal in serialcomm folder 
 		## 'npm run dev' 
 	- backend deals w/ serial communication
+	- to view the backend use the url: "http://localhost:8000/graphdata"
 
 Todo List
 
@@ -20,7 +21,7 @@ Todo List
 	- initial testing is trying to send a HIGH signal to board
 	- second wave of testing is board sending values back
 	- third wave is trying to change array values in DataAnalysis.js
-	- fourth wave is trying to change graph values in BarGraph.js\ 
+	- fourth wave is trying to change graph values in BarGraph.js \n 
 		(values might be moved to DataAnalysis.js)
 2. change graph info dynamically
 	-if it takes long default to just show graph info using list
