@@ -6,6 +6,7 @@ import StateButton from './StateButtons.js';
 
 let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const url1 = "http://localhost:8000/graphdata";
 
 function DataAnalysis() {
 	
@@ -86,7 +87,7 @@ function DataAnalysis() {
 	}
 	
 	
-	const UpdateVoltage = async () => {
+	/*const UpdateVoltage = async () => {
 		const n1Data = [Math.floor(Math.random() * 5), 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3];
 		setVdata(n1Data);
 	}
@@ -102,24 +103,40 @@ function DataAnalysis() {
 	}
 	
 	const Backend = async () => {
-		const response = await fetch("http://localhost:8000/message", {
+		const response = await fetch(url1, {
         		method: 'GET',
-        		headers: {
-        		},
+        		headers: {},
       		});
       		
       		const result = await response.json();
-      		setMessage(JSON.stringify(result, null, 4));
-	}
+      		const obj = JSON.stringify(result, null, 4);
+      		const arr = JSON.parse(obj);
+      		setMessage(obj);
+      		setTdata(arr.data.temp);
+	}*/
 
 	const Refresh = async () => {
-		UpdateVoltage();
+		/*UpdateVoltage();
 		UpdateCurrent();
 		UpdateTemperature();
 		
 		UpdateData();
 		
-		Backend();
+		Backend();*/
+		
+		UpdateData();
+		const response = await fetch(url1, {
+        		method: 'GET',
+        		headers: {},
+      		});
+      		
+      		const result = await response.json();
+      		const obj = JSON.stringify(result, null, 4);
+      		setMessage(obj);
+      		const arr = JSON.parse(obj);
+		setVdata(arr.data.volt);
+      		setTdata(arr.data.temp);
+      		setIdata(arr.data.curr);
 	}
 
 	return (
