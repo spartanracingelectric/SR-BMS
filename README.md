@@ -5,7 +5,7 @@ Note:
 
 1. after cloning repository open bms_app 
 	- install the react scripts using the following command
-	 ## 'npm install react-scripts'
+	 	## 'npm install react-scripts'
 	 otherwise you cannot run app on local host
 2. to use the backend you must run both the backend and frontend parts simultaneously
 	- frontend: open terminal in bms_app folder use: 

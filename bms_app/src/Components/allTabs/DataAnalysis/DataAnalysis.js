@@ -11,6 +11,7 @@ const url1 = "http://localhost:8000/graphdata";
 function DataAnalysis() {
 	
 	//holds string value fetched from server 8000 from server.js in serial comm
+	//message is for debugging
 	const [message, setMessage] = useState("");
 
 	/*
@@ -76,18 +77,18 @@ function DataAnalysis() {
 			before trying to change graph values
 	*/
 	
-	const [BData, SetData] = useState(initialData);
+	const [BData, setData] = useState(initialData);
 
-	const UpdateData = async () => {
+	/*const UpdateData = async () => {
 		 const newData = [(3.00).toFixed(2), (0.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2),
 		(2.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (1.00).toFixed(2), (3.00).toFixed(2),
 		(0.00).toFixed(2), (1.00).toFixed(2), (1.00).toFixed(2), (2.00).toFixed(2), (3.00).toFixed(2)]
 		
-		SetData(newData);
+		setData(newData);
 	}
 	
 	
-	/*const UpdateVoltage = async () => {
+	const UpdateVoltage = async () => {
 		const n1Data = [Math.floor(Math.random() * 5), 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3];
 		setVdata(n1Data);
 	}
@@ -124,7 +125,6 @@ function DataAnalysis() {
 		
 		Backend();*/
 		
-		UpdateData();
 		const response = await fetch(url1, {
         		method: 'GET',
         		headers: {},
@@ -134,9 +134,11 @@ function DataAnalysis() {
       		const obj = JSON.stringify(result, null, 4);
       		setMessage(obj);
       		const arr = JSON.parse(obj);
-		setVdata(arr.data.volt);
-      		setTdata(arr.data.temp);
-      		setIdata(arr.data.curr);
+      		
+		setVdata(arr.volt);
+      		setTdata(arr.temp);
+      		setIdata(arr.curr);
+      		setData(arr.static);
 	}
 
 	return (
