@@ -36,6 +36,8 @@ IsVirtualBomDocumentRemoved=0
 OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
+VaultGUID=1476D98D-BEE4-47E9-979E-A0335D1BCA3A
+ReleaseVaultName=Vincent Saw
 IncludeDesignInRelease=0
 CrossRefSheetStyle=1
 CrossRefLocationStyle=1
@@ -47,6 +49,17 @@ CrossRefFollowFromMainSettings=1
 [Preferences]
 PrefsVaultGUID=
 PrefsRevisionGUID=
+
+[ProjectReleaseNamings]
+ProjectMarco=SR-BMS-Master-Ver1-RevB_stm32f105
+ProjectItemFolderPath=Projects\SR-BMS-Master-Ver1-RevB_stm32f105
+ProjectItemHRID=
+Sources=SRC-`ProjectName`
+Fabrication=FAB-`ProjectName`
+Assembly=PCBA-`ProjectName`-`VariantName`
+
+[Release]
+ReleaseTarget=3
 
 [Document1]
 DocumentPath=SR-BMS-Master-Ver1-RevB.BomDoc
@@ -66,6 +79,23 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [Document2]
+DocumentPath=bmsMaster_cover.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=0
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=BMLBNSCJ
+
+[Document3]
 DocumentPath=bmsMaster_main.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -82,7 +112,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=DAYASJNG
 
-[Document3]
+[Document4]
 DocumentPath=bmsMaster_conn.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -99,8 +129,8 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=CBAUEDED
 
-[Document4]
-DocumentPath=bmsMaster_power.SchDoc
+[Document5]
+DocumentPath=bmsMaster_lvpower.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -116,7 +146,24 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=GQLCDFVK
 
-[Document5]
+[Document6]
+DocumentPath=bmsMaster_hvpath.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=7
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=0
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=BWTOEJEQ
+
+[Document7]
 DocumentPath=bmsMaster_usb.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -133,7 +180,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=FHVEVRHV
 
-[Document6]
+[Document8]
 DocumentPath=..\..\..\..\..\..\..\..\..\Documents\AltiumLL\SamacSys.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -150,7 +197,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=MPRJBCLL
 
-[Document7]
+[Document9]
 DocumentPath=..\..\..\..\..\..\..\..\..\Documents\AltiumLL\SamacSys.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -167,7 +214,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=NGLTGAHM
 
-[Document8]
+[Document10]
 DocumentPath=SnapDocs\171977-0004.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -184,7 +231,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=JVHTISAB
 
-[Document9]
+[Document11]
 DocumentPath=SnapDocs\171977-0004.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -201,7 +248,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document10]
+[Document12]
 DocumentPath=bmsMaster_isospi.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -218,7 +265,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=KHIUVWXK
 
-[Document11]
+[Document13]
 DocumentPath=bmsMaster_can.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -235,7 +282,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=XUEIKUZQ
 
-[Document12]
+[Document14]
 DocumentPath=bmsMaster_led.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -252,7 +299,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=JBTXQWOM
 
-[Document13]
+[Document15]
 DocumentPath=SnapDocs\TPS2116DRLR.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -269,7 +316,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=AVJYQUTQ
 
-[Document14]
+[Document16]
 DocumentPath=SnapDocs\TPS2116DRLR.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -286,24 +333,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document15]
-DocumentPath=SR-BMS-Master-Ver1-RevB.OutJob
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=0
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=
-
-[Document16]
+[Document17]
 DocumentPath=testpoint1.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -320,7 +350,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=ODMTFEWN
 
-[Document17]
+[Document18]
 DocumentPath=testpoint1.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -337,7 +367,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=JYLHXGPT
 
-[Document18]
+[Document19]
 DocumentPath=bmsMaster.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -354,7 +384,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=MHDKBHIB
 
-[Document19]
+[Document20]
 DocumentPath=CAMtastic1.Cam
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -371,8 +401,42 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document20]
+[Document21]
 DocumentPath=CAMtastic2.Cam
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=0
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[Document22]
+DocumentPath=WSBS5216L1000KK.PcbLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=0
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=QTMIWTLP
+
+[Document23]
+DocumentPath=20230904.OutJob
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -536,6 +600,10 @@ DItemRevisionGUID=
 DocumentPath=Project Outputs for SR-BMS-Master-Ver1-RevB\bmsMaster_Top_Courtyard.gbr
 DItemRevisionGUID=
 
+[GeneratedDocument38]
+DocumentPath=Project Outputs for SR-BMS-Master-Ver1-RevB_stm32f105\Design Rule Check - bmsMaster.html
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
@@ -545,6 +613,26 @@ Variant=[No Variations]
 OutputJobsCount=0
 ContentTypeGUID=CB6F2064-E317-11DF-B822-12313F0024A2
 ConfigurationType=Source
+
+[Configuration2]
+Name=Fabrication
+ParameterCount=0
+ConstraintFileCount=0
+ReleaseItemId=
+Variant=[No Variations]
+OutputJobsCount=0
+ContentTypeGUID=0C520D2A-E60C-11DF-B822-12313F0024A2
+ConfigurationType=Fabrication
+
+[Configuration3]
+Name=Assembly
+ParameterCount=0
+ConstraintFileCount=0
+ReleaseItemId=
+Variant=[No Variations]
+OutputJobsCount=0
+ContentTypeGUID=0D12F8DC-E60C-11DF-B822-12313F0024A2
+ConfigurationType=Assembly
 
 [Generic_SmartPDF]
 AutoOpenFile=-1
@@ -759,42 +847,48 @@ OutputDocumentPath8=
 OutputVariantName8=[No Variations]
 OutputDefault8=0
 PageOptions8=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType9=PCBLIB Print
-OutputName9=PCBLIB Prints
+OutputType9=PCBDrawing
+OutputName9=Draftsman
 OutputDocumentPath9=
 OutputVariantName9=[No Variations]
 OutputDefault9=0
 PageOptions9=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType10=PDF3D
-OutputName10=PDF3D
+OutputType10=PCBLIB Print
+OutputName10=PCBLIB Prints
 OutputDocumentPath10=
 OutputVariantName10=[No Variations]
 OutputDefault10=0
 PageOptions10=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType11=PDF3D MBA
-OutputName11=PDF3D MBA
+OutputType11=PDF3D
+OutputName11=PDF3D
 OutputDocumentPath11=
-OutputVariantName11=
+OutputVariantName11=[No Variations]
 OutputDefault11=0
 PageOptions11=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType12=Report Print
-OutputName12=Report Prints
+OutputType12=PDF3D MBA
+OutputName12=PDF3D MBA
 OutputDocumentPath12=
 OutputVariantName12=
 OutputDefault12=0
 PageOptions12=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType13=Schematic Print
-OutputName13=Schematic Prints
+OutputType13=Report Print
+OutputName13=Report Prints
 OutputDocumentPath13=
 OutputVariantName13=
 OutputDefault13=0
 PageOptions13=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType14=SimView Print
-OutputName14=SimView Prints
+OutputType14=Schematic Print
+OutputName14=Schematic Prints
 OutputDocumentPath14=
 OutputVariantName14=
 OutputDefault14=0
 PageOptions14=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
+OutputType15=SimView Print
+OutputName15=SimView Prints
+OutputDocumentPath15=
+OutputVariantName15=
+OutputDefault15=0
+PageOptions15=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
 
 [OutputGroup4]
 Name=Assembly Outputs
@@ -1299,6 +1393,7 @@ Type117=1
 Type118=1
 Type119=1
 Type120=1
+Type121=1
 
 [Difference Levels]
 Type1=1
@@ -1369,6 +1464,7 @@ Type65=1
 Type66=1
 Type67=1
 Type68=1
+Type69=1
 
 [Electrical Rules Check]
 Type1=1
@@ -1497,6 +1593,30 @@ Type124=1
 Type125=1
 Type126=1
 Type127=1
+Type128=2
+Type129=2
+Type130=2
+Type131=2
+Type132=2
+Type133=2
+Type134=2
+Type135=2
+Type136=2
+Type137=2
+Type138=1
+Type139=1
+Type140=1
+Type141=1
+Type142=1
+Type143=1
+Type144=1
+Type145=1
+Type146=1
+Type147=2
+Type148=2
+Type149=2
+Type150=2
+Type151=2
 
 [ERC Connection Matrix]
 L1=NNNNNNNNNNNWNNNWW
