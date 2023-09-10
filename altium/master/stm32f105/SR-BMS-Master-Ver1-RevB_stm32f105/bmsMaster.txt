@@ -1,0 +1,10 @@
+Board Information Report
+Filename     : C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\altium\master\SR-BMS-Master-Ver1-RevB\bmsMaster.PcbDoc
+Date         : 5/9/2023
+Time         : 7:36:52 PM
+Time Elapsed : 00:00:00
+
+General
+    Board Size, 3600milsx5400mils
+    Components on board, 132
+count : 2
