@@ -1,0 +1,18 @@
+!SESSION 2023-09-18 16:09:27.816 -----------------------------------------------
+eclipse.buildId=Version 1.13.1
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-09-18 16:14:11.575
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-09-18 16:14:11.583
+!MESSAGE Log4j2 initialized with config file C:\Users\vsaw3\Desktop\Git\_SRE\spartanracingelectric\SR-BMS\examples\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-09-18 16:14:26.113
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-09-18 16:14:42.222
+!MESSAGE Indexed 'stm32f105_blink' (25 sources, 113 headers) in 3.47 sec: 8,591 declarations; 37,481 references; 2 unresolved inclusions; 36 syntax errors; 188 unresolved names (0.41%)
