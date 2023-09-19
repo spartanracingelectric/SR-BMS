@@ -105,35 +105,20 @@ int main(void)
   MX_CAN2_Init();
   MX_TIM7_Init();
 
+  /* USER CODE BEGIN 2 */
   //Start timer
   GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
+  /* USER CODE END 2 */
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* USER CODE END WHILE */
 	  GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+    /* USER CODE BEGIN 3 */
   }
-}
-
-//Initialize struct values
-//Will initialize GPIO to LOW!
-void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin)
-{
-	HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); //Set GPIO LOW
-	gtp->gpio_port	= port;
-	gtp->gpio_pin	= pin;
-	gtp->ts_prev 	= 0; //Init to 0
-	gtp->ts_curr 	= 0; //Init to 0
-}
-
-//update_ms = update after X ms
-void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms)
-{
-	gtp->ts_curr = HAL_GetTick(); //Record current timestamp
-
-	if (gtp->ts_curr - gtp->ts_prev > update_ms) {
-		HAL_GPIO_TogglePin(gtp->gpio_port, gtp->gpio_pin); // Toggle GPIO
-		gtp->ts_prev = gtp->ts_curr;
-	}
+  /* USER CODE END 3 */
 }
 
 /**
@@ -191,6 +176,28 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+//Initialize struct values
+//Will initialize GPIO to LOW!
+void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin)
+{
+	HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); //Set GPIO LOW
+	gtp->gpio_port	= port;
+	gtp->gpio_pin	= pin;
+	gtp->ts_prev 	= 0; //Init to 0
+	gtp->ts_curr 	= 0; //Init to 0
+}
+
+//update_ms = update after X ms
+void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms)
+{
+	gtp->ts_curr = HAL_GetTick(); //Record current timestamp
+
+	if (gtp->ts_curr - gtp->ts_prev > update_ms) {
+		HAL_GPIO_TogglePin(gtp->gpio_port, gtp->gpio_pin); // Toggle GPIO
+		gtp->ts_prev = gtp->ts_curr;
+	}
+}
 
 /* USER CODE END 4 */
 
