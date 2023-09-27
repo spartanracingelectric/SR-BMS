@@ -63,6 +63,12 @@ typedef struct _GpioTimePacket {
 	uint32_t 		ts_curr; 	//Current timestamp
 } GpioTimePacket;
 
+typedef struct _TimerPacket {
+	uint32_t 		ts_prev;	//Previous timestamp
+	uint32_t 		ts_curr; 	//Current timestamp
+	uint32_t		delay;		//Amount to delay
+} TimerPacket;
+
 uint8_t chSize = 3;
 char ch[] = "ab";
 
@@ -73,7 +79,13 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin);
 
+void TimerPacket_Init(TimerPacket *tp, uint32_t delay);
+
 void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms);
+
+//Returns 1 at every tp->delay interval
+uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
+
 
 /* USER CODE END PFP */
 
@@ -90,6 +102,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	GpioTimePacket tp_led_heartbeat;
+	TimerPacket timerpacket_ltc;
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
@@ -129,6 +142,7 @@ int main(void)
 
   //Start timer
   GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
+  TimerPacket_Init(&timerpacket_ltc, LTC_DELAY);
 
   //Pull SPI1 nCS HIGH (deselect)
   LTC_nCS_High();
@@ -146,33 +160,14 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 
-		curr = HAL_GetTick(); //Record current timestamp
-
-		if (curr - prev > LTC_DELAY) {
+		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			char buf[20];
-			//cmd[0] = 0x07; //Returns 0xFF (clear aux reg)
-			//cmd[1] = 0x12; //Returns 0xFF (clear aux reg)
-			//cmd[0] = 0x00; //Returns 0x00 (clear stat reg)
-			//cmd[1] = 0x18; //Returns 0x00 (clear stat reg)
-
-			//Wake
-			LTC_Wakeup_Idle();
-
-//			LTC_nCS_Low(); //Pull CS low
-//			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-//			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 8, 100);
-//			//HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-//			//HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
-//			LTC_nCS_High(); //Pull CS high
 
 			LTC_ReadRawCellVoltages((uint8_t *)read_val);
 
 			sprintf(buf, "%d %d %d %d\n", read_val[0], read_val[1], read_val[2], read_val[3]);
 
-		    //read_val[1] = '\0';
-
 			USB_Transmit(buf, 20);
-			prev = curr;
 		}
   }
   /* USER CODE END 3 */
@@ -255,6 +250,27 @@ void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms)
 		HAL_GPIO_TogglePin(gtp->gpio_port, gtp->gpio_pin); // Toggle GPIO
 		gtp->ts_prev = gtp->ts_curr;
 	}
+}
+
+//Initialize struct values
+//Will initialize GPIO to LOW!
+void TimerPacket_Init(TimerPacket *tp, uint32_t delay)
+{
+	tp->ts_prev 	= 0;		//Init to 0
+	tp->ts_curr 	= 0; 		//Init to 0
+	tp->delay		= delay;	//Init to user value
+}
+
+//update_ms = update after X ms
+uint8_t TimerPacket_FixedPulse(TimerPacket *tp)
+{
+	tp->ts_curr = HAL_GetTick(); //Record current timestamp
+
+	if (tp->ts_curr - tp->ts_prev > tp->delay) {
+		tp->ts_prev = tp->ts_curr; //Update prev timestamp to current
+		return 1; //Enact event (time interval is a go)
+	}
+	return 0; //Do not enact event
 }
 
 /* USER CODE END 4 */
