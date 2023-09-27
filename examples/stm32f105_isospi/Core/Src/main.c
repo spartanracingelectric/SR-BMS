@@ -38,7 +38,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LTC_DELAY				500 //500ms update delay
+#define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
 #define LTC_CMD_RDSTATA			0x0010 //Read status register group A
 /* USER CODE END PD */
@@ -131,7 +131,7 @@ int main(void)
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
-	uint8_t cmd[4], read_val[2];
+	uint8_t cmd[4], read_val[8];
 	uint16_t cmd_pec;
 
   /* USER CODE END 1 */
@@ -184,25 +184,38 @@ int main(void)
 		curr = HAL_GetTick(); //Record current timestamp
 
 		if (curr - prev > LTC_DELAY) {
-			char buf[5];
-			//cmd[0] = 0x07; //Returns 0xFF
-			//cmd[1] = 0x12; //Returns 0xFF
-			cmd[0] = 0x00; //Returns 0x00
-			cmd[1] = 0x18; //Returns 0x00
+			char dat;
+			char *datPtr;
+			datPtr = &dat;
+			char buf[20];
+			//cmd[0] = 0x07; //Returns 0xFF (clear aux reg)
+			//cmd[1] = 0x12; //Returns 0xFF (clear aux reg)
+			//cmd[0] = 0x00; //Returns 0x00 (clear stat reg)
+			//cmd[1] = 0x18; //Returns 0x00 (clear stat reg)
+			cmd[0] = 0x00; //RDCVA
+			cmd[1] = 0x04; //RDCVA
 			cmd_pec = pec15_calc(2, cmd);
 			cmd[2] = (uint8_t)(cmd_pec >> 8);
 			cmd[3] = (uint8_t)(cmd_pec);
 
+			//Wake
+			*datPtr = 0xFF;
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); //Pull CS low
-			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
+			HAL_SPI_Transmit(&hspi1, datPtr, 1, 100);
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); //Pull CS high
 
-			sprintf(buf, "%d\n", read_val[0]);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); //Pull CS low
+			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 8, 100);
+			//HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+			//HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); //Pull CS high
+
+			sprintf(buf, "%d %d %d %d\n", read_val[0], read_val[1], read_val[2], read_val[3]);
 
 		    //read_val[1] = '\0';
 
-			USB_Transmit(buf, 5);
+			USB_Transmit(buf, 20);
 			prev = curr;
 		}
   }
