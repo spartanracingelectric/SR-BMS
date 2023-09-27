@@ -149,9 +149,6 @@ int main(void)
 		curr = HAL_GetTick(); //Record current timestamp
 
 		if (curr - prev > LTC_DELAY) {
-			char dat;
-			char *datPtr;
-			datPtr = &dat;
 			char buf[20];
 			//cmd[0] = 0x07; //Returns 0xFF (clear aux reg)
 			//cmd[1] = 0x12; //Returns 0xFF (clear aux reg)
@@ -164,10 +161,7 @@ int main(void)
 			cmd[3] = (uint8_t)(cmd_pec);
 
 			//Wake
-			*datPtr = 0xFF;
-			LTC_nCS_Low(); //Pull CS low
-			HAL_SPI_Transmit(&hspi1, datPtr, 1, 100);
-			LTC_nCS_High(); //Pull CS high
+			LTC_Wakeup_Idle();
 
 			LTC_nCS_Low(); //Pull CS low
 			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);

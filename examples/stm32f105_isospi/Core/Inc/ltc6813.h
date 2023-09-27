@@ -6,6 +6,7 @@
  */
 #include <stdint.h>
 #include "main.h"
+#include "spi.h"
 
 #ifndef INC_LTC6813_H_
 #define INC_LTC6813_H_
@@ -21,8 +22,13 @@ void LTC_Set_Num_Devices(uint8_t num);
 /* Get number of LTC6813/slave devices */
 uint8_t LTC_Get_Num_Devices(void);
 
+/* Pull nCS line to SPI1 HIGH */
 void LTC_nCS_High(void);
 
+/* Pull nCS line to SPI1 LOW */
 void LTC_nCS_Low(void);
+
+/* Wake LTC up from IDLE state into READY state */
+HAL_StatusTypeDef LTC_Wakeup_Idle(void);
 
 #endif /* INC_LTC6813_H_ */

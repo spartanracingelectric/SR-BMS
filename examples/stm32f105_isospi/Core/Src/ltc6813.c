@@ -72,3 +72,15 @@ void LTC_nCS_High(void) {
 void LTC_nCS_Low(void) {
 	HAL_GPIO_WritePin(LTC_nCS_GPIO_Port, LTC_nCS_Pin, GPIO_PIN_RESET); //Pull CS high
 }
+
+/* Wake LTC up from IDLE state into READY state */
+HAL_StatusTypeDef LTC_Wakeup_Idle(void) {
+	HAL_StatusTypeDef retval;
+	char hex_ff = 0xFF;
+
+	LTC_nCS_Low(); //Pull CS low
+	retval = HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
+	LTC_nCS_High(); //Pull CS high
+
+	return retval;
+}
