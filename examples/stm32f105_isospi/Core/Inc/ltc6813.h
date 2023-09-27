@@ -49,4 +49,7 @@ void LTC_nCS_Low(void);
 /* Wake LTC up from IDLE state into READY state */
 LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void);
 
+/* Read and store raw cell voltages at uint8_t pointer */
+LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint8_t *read_voltages);
+
 #endif /* INC_LTC6813_H_ */

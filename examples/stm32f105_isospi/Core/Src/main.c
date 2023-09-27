@@ -93,7 +93,7 @@ int main(void)
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
-	uint8_t cmd[4], read_val[8];
+	uint8_t read_val[8];
 	uint16_t cmd_pec;
 
   /* USER CODE END 1 */
@@ -154,21 +154,18 @@ int main(void)
 			//cmd[1] = 0x12; //Returns 0xFF (clear aux reg)
 			//cmd[0] = 0x00; //Returns 0x00 (clear stat reg)
 			//cmd[1] = 0x18; //Returns 0x00 (clear stat reg)
-			cmd[0] = 0x00; //RDCVA
-			cmd[1] = 0x04; //RDCVA
-			cmd_pec = LTC_PEC15_Calc(2, cmd);
-			cmd[2] = (uint8_t)(cmd_pec >> 8);
-			cmd[3] = (uint8_t)(cmd_pec);
 
 			//Wake
 			LTC_Wakeup_Idle();
 
-			LTC_nCS_Low(); //Pull CS low
-			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 8, 100);
-			//HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-			//HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
-			LTC_nCS_High(); //Pull CS high
+//			LTC_nCS_Low(); //Pull CS low
+//			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+//			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 8, 100);
+//			//HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+//			//HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
+//			LTC_nCS_High(); //Pull CS high
+
+			LTC_ReadRawCellVoltages((uint8_t *)read_val);
 
 			sprintf(buf, "%d %d %d %d\n", read_val[0], read_val[1], read_val[2], read_val[3]);
 

@@ -7,7 +7,9 @@
 
 #include "ltc6813.h"
 
+static const uint16_t LTC_CMD_RDVCA = 0x0400;
 
+static const uint8_t LTC_SPI_TX_BIT_OFFSET = 0; //Num bits to shift RX status code
 static const uint8_t LTC_SPI_RX_BIT_OFFSET = 4; //Num bits to shift RX status code
 static const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
 
@@ -37,6 +39,7 @@ static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 
                                             };
 
 static uint8_t num_devices = 1; //Keep visibility within this file
+static uint8_t num_series_groups = 12; //Number of series groups
 
 /* Calculates  and returns the CRC15 */
 uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
@@ -85,7 +88,40 @@ LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
 
 	hal_ret = HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
 	if (hal_ret) { //Non-zero means error
-		ret |= (1 << hal_ret); //Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+	}
+
+	LTC_nCS_High(); //Pull CS high
+
+	return ret;
+}
+
+/* Read and store raw cell voltages at uint8_t pointer */
+LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint8_t *read_voltages) {
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+	uint8_t cmd[4];
+	uint16_t cmd_pec;
+
+	cmd[0] = (0xFF & (LTC_CMD_RDVCA)); //RDCVA
+	cmd[1] = (0xFF & (LTC_CMD_RDVCA >> 8)); //RDCVA
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
+
+	LTC_nCS_Low(); //Pull CS low
+
+	hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+	if (hal_ret) { //Non-zero means error
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+	}
+
+	hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t *)read_voltages, LTC_Get_Num_Devices()*REG_LEN, 100);
+	if (hal_ret) { //Non-zero means error
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
 	}
 
 	LTC_nCS_High(); //Pull CS high
