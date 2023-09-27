@@ -11,6 +11,24 @@
 #ifndef INC_LTC6813_H_
 #define INC_LTC6813_H_
 
+/* Status enumeration for SPI in order
+ * 	to fit transmit+receive error codes in same packet
+ *
+ * Proportional to HAL_StatusTypeDef.
+ *
+ * RX error codes shifted left by 4 (one hex char) relative to HAL_StatusTypeDef value.
+ */
+typedef enum
+{
+  LTC_SPI_OK       		= 0x00U, //0b00000000
+  LTC_SPI_TX_ERROR  	= 0x02U, //0b00000010
+  LTC_SPI_TX_BUSY   	= 0x04U, //0b00000100
+  LTC_SPI_TX_TIMEOUT  	= 0x08U, //0b00001000
+  LTC_SPI_RX_ERROR  	= 0x20U, //0b00100000
+  LTC_SPI_RX_BUSY   	= 0x40U, //0b01000000
+  LTC_SPI_RX_TIMEOUT  	= 0x80U	 //0b10000000
+} LTC_SPI_StatusTypeDef;
+
 /* Calculates  and returns the CRC15 */
 uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
                     	uint8_t *data //Array of data that will be used to calculate a PEC
@@ -29,6 +47,6 @@ void LTC_nCS_High(void);
 void LTC_nCS_Low(void);
 
 /* Wake LTC up from IDLE state into READY state */
-HAL_StatusTypeDef LTC_Wakeup_Idle(void);
+LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void);
 
 #endif /* INC_LTC6813_H_ */

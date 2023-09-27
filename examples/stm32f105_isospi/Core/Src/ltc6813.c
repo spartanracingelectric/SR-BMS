@@ -7,7 +7,9 @@
 
 #include "ltc6813.h"
 
-const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
+
+static const uint8_t LTC_SPI_RX_BIT_OFFSET = 4; //Num bits to shift RX status code
+static const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
 
 static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac,  //!<precomputed CRC15 Table
     0xff35, 0x2cc8, 0xe951, 0xe263, 0x27fa, 0xad97, 0x680e, 0x633c, 0xa6a5, 0x7558, 0xb0c1,
@@ -74,13 +76,19 @@ void LTC_nCS_Low(void) {
 }
 
 /* Wake LTC up from IDLE state into READY state */
-HAL_StatusTypeDef LTC_Wakeup_Idle(void) {
-	HAL_StatusTypeDef retval;
+LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
 	char hex_ff = 0xFF;
 
 	LTC_nCS_Low(); //Pull CS low
-	retval = HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
+
+	hal_ret = HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
+	if (hal_ret) { //Non-zero means error
+		ret |= (1 << hal_ret); //Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+	}
+
 	LTC_nCS_High(); //Pull CS high
 
-	return retval;
+	return ret;
 }
