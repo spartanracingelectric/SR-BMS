@@ -101,23 +101,6 @@ void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/* Calculates  and returns the CRC15 */
-uint16_t pec15_calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
-                    uint8_t *data //Array of data that will be used to calculate  a PEC
-                   )
-{
-	uint16_t remainder,addr;
-	remainder = 16;//initialize the PEC
-
-	for (uint8_t i = 0; i<len; i++) // loops for each byte in data array
-	{
-		addr = ((remainder>>7)^data[i])&0xff;//calculate PEC table address
-		remainder = (remainder<<8)^crc15Table[addr];
-	}
-
-	return(remainder*2);//The CRC15 has a 0 in the LSB so the remainder must be multiplied by 2
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -194,7 +177,7 @@ int main(void)
 			//cmd[1] = 0x18; //Returns 0x00 (clear stat reg)
 			cmd[0] = 0x00; //RDCVA
 			cmd[1] = 0x04; //RDCVA
-			cmd_pec = pec15_calc(2, cmd);
+			cmd_pec = LTC_PEC15_Calc(2, cmd);
 			cmd[2] = (uint8_t)(cmd_pec >> 8);
 			cmd[3] = (uint8_t)(cmd_pec);
 
