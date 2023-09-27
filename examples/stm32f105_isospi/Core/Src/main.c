@@ -130,7 +130,8 @@ int main(void)
   //Start timer
   GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
 
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); //Pull CS high
+  //Pull SPI1 nCS HIGH (deselect)
+  LTC_nCS_High();
 
   LTC_Set_Num_Devices(NUM_DEVICES);
 
@@ -164,16 +165,16 @@ int main(void)
 
 			//Wake
 			*datPtr = 0xFF;
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); //Pull CS low
+			LTC_nCS_Low(); //Pull CS low
 			HAL_SPI_Transmit(&hspi1, datPtr, 1, 100);
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); //Pull CS high
+			LTC_nCS_High(); //Pull CS high
 
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); //Pull CS low
+			LTC_nCS_Low(); //Pull CS low
 			HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
 			HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 8, 100);
 			//HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
 			//HAL_SPI_Receive(&hspi1, (uint8_t *)read_val, 1, 100);
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); //Pull CS high
+			LTC_nCS_High(); //Pull CS high
 
 			sprintf(buf, "%d %d %d %d\n", read_val[0], read_val[1], read_val[2], read_val[3]);
 

@@ -21,4 +21,8 @@ void LTC_Set_Num_Devices(uint8_t num);
 /* Get number of LTC6813/slave devices */
 uint8_t LTC_Get_Num_Devices(void);
 
+void LTC_nCS_High(void);
+
+void LTC_nCS_Low(void);
+
 #endif /* INC_LTC6813_H_ */
