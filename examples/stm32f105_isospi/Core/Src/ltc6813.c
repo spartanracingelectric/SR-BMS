@@ -34,6 +34,7 @@ static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 
     0x585a, 0x8ba7, 0x4e3e, 0x450c, 0x8095
                                             };
 
+static uint8_t num_devices = 1; //Keep visibility within this file
 
 /* Calculates  and returns the CRC15 */
 uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
@@ -50,4 +51,14 @@ uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calc
 	}
 
 	return(remainder*2);//The CRC15 has a 0 in the LSB so the remainder must be multiplied by 2
+}
+
+/* Set number of LTC6813/slave devices */
+void LTC_Set_Num_Devices(uint8_t num) {
+	num_devices = num;
+}
+
+/* Get number of LTC6813/slave devices */
+uint8_t LTC_Get_Num_Devices(void) {
+	return num_devices;
 }
