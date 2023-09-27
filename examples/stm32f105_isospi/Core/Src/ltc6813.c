@@ -26,6 +26,7 @@ static const uint16_t LTC_CMD_RDCV[6] = {
 static const uint8_t LTC_SPI_TX_BIT_OFFSET = 0; //Num bits to shift RX status code
 static const uint8_t LTC_SPI_RX_BIT_OFFSET = 4; //Num bits to shift RX status code
 static const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
+static const uint8_t LTC_SERIES_GROUPS_PER_RDCV = 3; //Number of cell voltage groups per 8 byte register
 
 static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac,  //!<precomputed CRC15 Table
     0xff35, 0x2cc8, 0xe951, 0xe263, 0x27fa, 0xad97, 0x680e, 0x633c, 0xa6a5, 0x7558, 0xb0c1,
@@ -74,12 +75,22 @@ uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calc
 
 /* Set number of LTC6813/slave devices */
 void LTC_Set_Num_Devices(uint8_t num) {
-	num_devices = num;
+	if (num) num_devices = num; //Non-zero
 }
 
 /* Get number of LTC6813/slave devices */
 uint8_t LTC_Get_Num_Devices(void) {
 	return num_devices;
+}
+
+/* Set number of series groups per LTC6813/slave */
+void LTC_Set_Num_Series_Groups(uint8_t num) {
+	if (num && (num <= 18)) num_series_groups = num; //Non-zero and 18 or less
+}
+
+/* Get number of series groups per LTC6813/slave */
+uint8_t LTC_Get_Num_Series_Groups(void) {
+	return num_series_groups;
 }
 
 /* Pull nCS line to SPI1 HIGH */
@@ -111,39 +122,47 @@ LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
 	return ret;
 }
 
-/* Read and store raw cell voltages at uint8_t pointer */
-LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint8_t *read_voltages) {
+/* Read and store raw cell voltages at uint8_t 2d pointer */
+LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint16_t *read_voltages) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
 	LTC_SPI_StatusTypeDef hal_ret;
-	uint8_t cmd[4];
-	uint16_t cmd_pec;
+	const uint8_t ARR_SIZE_REG = LTC_Get_Num_Devices()*REG_LEN;
+	uint8_t read_voltages_reg[ARR_SIZE_REG];
 
 	// CMD0 write: CC[8:10]
 	// CMD1 write: CC[0:7]
 	// Page 59 LTC6813 datasheet
-	cmd[0] = (0xFF & (LTC_CMD_RDCV[0] >> 8)); //RDCVA
-	cmd[1] = (0xFF & (LTC_CMD_RDCV[0])); //RDCVA
-	cmd_pec = LTC_PEC15_Calc(2, cmd);
-	cmd[2] = (uint8_t)(cmd_pec >> 8);
-	cmd[3] = (uint8_t)(cmd_pec);
+	for (uint8_t i = 0; i < (LTC_Get_Num_Series_Groups()/LTC_SERIES_GROUPS_PER_RDCV); i++) {
+		uint8_t cmd[4];
+		uint16_t cmd_pec;
 
-	LTC_Wakeup_Idle(); //Wake LTC up
+		cmd[0] = (0xFF & (LTC_CMD_RDCV[i] >> 8)); //RDCVA
+		cmd[1] = (0xFF & (LTC_CMD_RDCV[i])); //RDCVA
+		cmd_pec = LTC_PEC15_Calc(2, cmd);
+		cmd[2] = (uint8_t)(cmd_pec >> 8);
+		cmd[3] = (uint8_t)(cmd_pec);
 
-	LTC_nCS_Low(); //Pull CS low
+		LTC_Wakeup_Idle(); //Wake LTC up
 
-	hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
-	if (hal_ret) { //Non-zero means error
-		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
-		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+		LTC_nCS_Low(); //Pull CS low
+
+		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
+		if (hal_ret) { //Non-zero means error
+			//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+			ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+		}
+
+		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t *)read_voltages_reg, ARR_SIZE_REG, 100);
+		if (hal_ret) { //Non-zero means error
+			//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+			ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
+		}
+		for (uint8_t j = 0; j < LTC_Get_Num_Devices(); j++) {
+			memcpy(read_voltages+((i*(REG_LEN-2))+(j*LTC_Get_Num_Devices()*(REG_LEN-2)))/2, read_voltages_reg, sizeof(read_voltages_reg)-(2*sizeof(read_voltages_reg[0])) );
+		}
+
+		LTC_nCS_High(); //Pull CS high
 	}
-
-	hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t *)read_voltages, LTC_Get_Num_Devices()*REG_LEN, 100);
-	if (hal_ret) { //Non-zero means error
-		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
-		ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
-	}
-
-	LTC_nCS_High(); //Pull CS high
 
 	return ret;
 }

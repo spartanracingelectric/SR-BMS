@@ -106,7 +106,7 @@ int main(void)
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
-	uint8_t read_val[8];
+	uint16_t read_val[12]; //2 bytes per series * 12 series
 	uint16_t cmd_pec;
 
   /* USER CODE END 1 */
@@ -148,6 +148,7 @@ int main(void)
   LTC_nCS_High();
 
   LTC_Set_Num_Devices(NUM_DEVICES);
+  LTC_Set_Num_Series_Groups(12);
 
   /* USER CODE END 2 */
 
@@ -161,18 +162,19 @@ int main(void)
 		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
-			char buf[16];
-			char out_buf[128] = "";
+			char buf[20];
+			char out_buf[2048] = "";
 			char char_to_str[2];
 
-			LTC_ReadRawCellVoltages((uint8_t *)read_val);
+			LTC_ReadRawCellVoltages((uint16_t *)read_val);
 
 			char_to_str[0] = '\n';
 			char_to_str[1] = '\0';
 
-			for (uint8_t i = 0; i < 6; i+=2) {
-				sprintf(buf, "C%u:0x%02X%02X ", (i/2)+1, read_val[i+1], read_val[i]);
-				strncat(out_buf, buf, 16);
+			for (uint8_t i = 0; i < 12; i++) {
+				sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
+				strncat(out_buf, buf, 20);
+				strncat(out_buf, char_to_str, 3);
 			}
 			strncat(out_buf, char_to_str, 3);
 

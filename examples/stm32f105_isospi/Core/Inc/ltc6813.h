@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include "main.h"
 #include "spi.h"
+#include "string.h"
+
 
 #ifndef INC_LTC6813_H_
 #define INC_LTC6813_H_
@@ -40,6 +42,12 @@ void LTC_Set_Num_Devices(uint8_t num);
 /* Get number of LTC6813/slave devices */
 uint8_t LTC_Get_Num_Devices(void);
 
+/* Set number of series groups per LTC6813/slave */
+void LTC_Set_Num_Series_Groups(uint8_t num);
+
+/* Get number of series groups per LTC6813/slave */
+uint8_t LTC_Get_Num_Series_Groups(void);
+
 /* Pull nCS line to SPI1 HIGH */
 void LTC_nCS_High(void);
 
@@ -50,6 +58,6 @@ void LTC_nCS_Low(void);
 LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void);
 
 /* Read and store raw cell voltages at uint8_t pointer */
-LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint8_t *read_voltages);
+LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint16_t *read_voltages);
 
 #endif /* INC_LTC6813_H_ */
