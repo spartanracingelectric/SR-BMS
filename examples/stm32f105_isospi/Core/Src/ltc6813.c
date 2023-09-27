@@ -79,7 +79,7 @@ void LTC_nCS_Low(void) {
 LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
 	LTC_SPI_StatusTypeDef hal_ret;
-	char hex_ff = 0xFF;
+	uint8_t hex_ff = 0xFF;
 
 	LTC_nCS_Low(); //Pull CS low
 
