@@ -7,7 +7,7 @@
 
 #include "ltc6813.h"
 
-static const uint16_t LTC_CMD_RDCVA = 0x0400;
+static const uint16_t LTC_CMD_RDCVA = 0x0004;
 
 static const uint8_t LTC_SPI_TX_BIT_OFFSET = 0; //Num bits to shift RX status code
 static const uint8_t LTC_SPI_RX_BIT_OFFSET = 4; //Num bits to shift RX status code
@@ -104,8 +104,11 @@ LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint8_t *read_voltages) {
 	uint8_t cmd[4];
 	uint16_t cmd_pec;
 
-	cmd[0] = (0xFF & (LTC_CMD_RDCVA)); //RDCVA
-	cmd[1] = (0xFF & (LTC_CMD_RDCVA >> 8)); //RDCVA
+	// CMD0 write: CC[8:10]
+	// CMD1 write: CC[0:7]
+	// Page 59 LTC6813 datasheet
+	cmd[0] = (0xFF & (LTC_CMD_RDCVA >> 8)); //RDCVA
+	cmd[1] = (0xFF & (LTC_CMD_RDCVA)); //RDCVA
 	cmd_pec = LTC_PEC15_Calc(2, cmd);
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
