@@ -44,7 +44,7 @@
 #define NUM_SERIES_GROUPS_PER_MOD_DEFAULT	12	//12 in series
 #define NUM_SERIES_GROUPS_TOTAL_DEFAULT		(NUM_DEVICES_DEFAULT * NUM_SERIES_GROUPS_PER_MOD_DEFAULT) //24 series groups
 
-#define LTC_DELAY				1000 //500ms update delay
+#define LTC_DELAY_MS			1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
 #define LTC_CMD_RDSTATA			0x0010 //Read status register group A
 /* USER CODE END PD */
@@ -57,13 +57,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-typedef struct _GpioTimePacket {
-	GPIO_TypeDef 	*gpio_port; //Port
-	uint16_t		gpio_pin;	//Pin number
-	uint32_t 		ts_prev;	//Previous timestamp
-	uint32_t 		ts_curr; 	//Current timestamp
-} GpioTimePacket;
 
 typedef struct _TimerPacket {
 	uint32_t 		ts_prev;	//Previous timestamp
@@ -79,15 +72,17 @@ char ch[] = "ab";
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin);
 
 void TimerPacket_Init(TimerPacket *tp, uint32_t delay);
-
-void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms);
 
 //Returns 1 at every tp->delay interval
 uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 
+//Set Heartbeat LED to LOW
+void LED_Heartbeat_Init(void);
+
+//Toggle Heartbeat LED
+void LED_Heartbeat_Toggle(void);
 
 /* USER CODE END PFP */
 
@@ -103,8 +98,8 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	GpioTimePacket tp_led_heartbeat;
-	TimerPacket timerpacket_ltc;
+	TimerPacket tp_led_heartbeat;
+	TimerPacket tp_ltc;
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
@@ -143,8 +138,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   //Start timer
-  GpioTimePacket_Init(&tp_led_heartbeat, MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin);
-  TimerPacket_Init(&timerpacket_ltc, LTC_DELAY);
+  TimerPacket_Init(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
+  TimerPacket_Init(&tp_ltc, LTC_DELAY_MS);
+
+  //Set Heartbeat LED initial value to LOW
+  LED_Heartbeat_Init();
 
   //Pull SPI1 nCS HIGH (deselect)
   LTC_nCS_High();
@@ -161,9 +159,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		GpioFixedToggle(&tp_led_heartbeat, LED_HEARTBEAT_DELAY_MS);
 
-		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
+	  	//LED HEARTBEAT
+		if (TimerPacket_FixedPulse(&tp_led_heartbeat)) { LED_Heartbeat_Toggle(); }
+
+		//READ CELL VOLTAGE
+		if (TimerPacket_FixedPulse(&tp_ltc)) {
 			char buf[20];
 			char out_buf[1024] = "";
 			char char_to_str[2];
@@ -244,29 +245,6 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 //Initialize struct values
-//Will initialize GPIO to LOW!
-void GpioTimePacket_Init(GpioTimePacket *gtp, GPIO_TypeDef *port, uint16_t pin)
-{
-	HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); //Set GPIO LOW
-	gtp->gpio_port	= port;
-	gtp->gpio_pin	= pin;
-	gtp->ts_prev 	= 0; //Init to 0
-	gtp->ts_curr 	= 0; //Init to 0
-}
-
-//update_ms = update after X ms
-void GpioFixedToggle(GpioTimePacket *gtp, uint16_t update_ms)
-{
-	gtp->ts_curr = HAL_GetTick(); //Record current timestamp
-
-	if (gtp->ts_curr - gtp->ts_prev > update_ms) {
-		HAL_GPIO_TogglePin(gtp->gpio_port, gtp->gpio_pin); // Toggle GPIO
-		gtp->ts_prev = gtp->ts_curr;
-	}
-}
-
-//Initialize struct values
-//Will initialize GPIO to LOW!
 void TimerPacket_Init(TimerPacket *tp, uint32_t delay)
 {
 	tp->ts_prev 	= 0;		//Init to 0
@@ -274,7 +252,7 @@ void TimerPacket_Init(TimerPacket *tp, uint32_t delay)
 	tp->delay		= delay;	//Init to user value
 }
 
-//update_ms = update after X ms
+//tp->delay = update after X ms
 uint8_t TimerPacket_FixedPulse(TimerPacket *tp)
 {
 	tp->ts_curr = HAL_GetTick(); //Record current timestamp
@@ -284,6 +262,14 @@ uint8_t TimerPacket_FixedPulse(TimerPacket *tp)
 		return 1; //Enact event (time interval is a go)
 	}
 	return 0; //Do not enact event
+}
+
+void LED_Heartbeat_Init(void) {
+	HAL_GPIO_WritePin(MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin, GPIO_PIN_RESET); //Set GPIO LOW
+}
+
+void LED_Heartbeat_Toggle(void) {
+	HAL_GPIO_TogglePin(MCU_HEARTBEAT_LED_GPIO_Port, MCU_HEARTBEAT_LED_Pin); //Set GPIO LOW
 }
 
 /* USER CODE END 4 */
