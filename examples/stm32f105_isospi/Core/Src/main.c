@@ -46,7 +46,7 @@
 
 #define LTC_DELAY_MS			1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
-#define LTC_CMD_RDSTATA			0x0010 //Read status register group A
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -63,9 +63,6 @@ typedef struct _TimerPacket {
 	uint32_t 		ts_curr; 	//Current timestamp
 	uint32_t		delay;		//Amount to delay
 } TimerPacket;
-
-uint8_t chSize = 3;
-char ch[] = "ab";
 
 /* USER CODE END PV */
 
@@ -98,13 +95,10 @@ void LED_Heartbeat_Toggle(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	TimerPacket tp_led_heartbeat;
-	TimerPacket tp_ltc;
-	uint32_t prev = 0, curr = 0;
+  TimerPacket tp_led_heartbeat;
+  TimerPacket tp_ltc;
 
-	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
-	uint16_t read_val[NUM_SERIES_GROUPS_TOTAL_DEFAULT]; //To hold all series groups' data
-	uint16_t cmd_pec;
+  uint16_t read_val[NUM_SERIES_GROUPS_TOTAL_DEFAULT]; //To hold all series groups' data
 
   /* USER CODE END 1 */
 
