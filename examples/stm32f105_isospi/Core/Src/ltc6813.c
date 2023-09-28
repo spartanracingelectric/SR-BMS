@@ -158,7 +158,7 @@ LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint16_t *read_voltages) {
 			ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
 		}
 		for (uint8_t j = 0; j < LTC_Get_Num_Devices(); j++) {
-			memcpy(read_voltages+(i*LTC_SERIES_GROUPS_PER_RDCV)+(j*LTC_Get_Num_Series_Groups()), read_voltages_reg, sizeof(read_voltages_reg)-(2*sizeof(read_voltages_reg[0])) );
+			memcpy(read_voltages+(i*LTC_SERIES_GROUPS_PER_RDCV)+(j*LTC_Get_Num_Series_Groups()), read_voltages_reg+(j*REG_LEN), sizeof(read_voltages_reg)-(2*sizeof(read_voltages_reg[0])) );
 			HAL_Delay(5); //Delay 5ms to allow memcpy completion
 		}
 
