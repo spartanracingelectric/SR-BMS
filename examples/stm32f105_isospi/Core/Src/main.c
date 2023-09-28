@@ -40,7 +40,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define NUM_DEVICES				1	//1 slave board
+#define NUM_DEVICES_DEFAULT					2	//2 slave boards
+#define NUM_SERIES_GROUPS_PER_MOD_DEFAULT	12	//12 in series
+#define NUM_SERIES_GROUPS_TOTAL_DEFAULT		(NUM_DEVICES_DEFAULT * NUM_SERIES_GROUPS_PER_MOD_DEFAULT) //24 series groups
 
 #define LTC_DELAY				1000 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
@@ -106,7 +108,7 @@ int main(void)
 	uint32_t prev = 0, curr = 0;
 
 	const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
-	uint16_t read_val[12]; //2 bytes per series * 12 series
+	uint16_t read_val[NUM_SERIES_GROUPS_TOTAL_DEFAULT]; //To hold all series groups' data
 	uint16_t cmd_pec;
 
   /* USER CODE END 1 */
@@ -147,8 +149,8 @@ int main(void)
   //Pull SPI1 nCS HIGH (deselect)
   LTC_nCS_High();
 
-  LTC_Set_Num_Devices(NUM_DEVICES);
-  LTC_Set_Num_Series_Groups(12);
+  LTC_Set_Num_Devices(NUM_DEVICES_DEFAULT);
+  LTC_Set_Num_Series_Groups(NUM_SERIES_GROUPS_PER_MOD_DEFAULT);
 
   /* USER CODE END 2 */
 
@@ -163,7 +165,7 @@ int main(void)
 
 		if (TimerPacket_FixedPulse(&timerpacket_ltc)) {
 			char buf[20];
-			char out_buf[2048] = "";
+			char out_buf[1024] = "";
 			char char_to_str[2];
 
 			LTC_ReadRawCellVoltages((uint16_t *)read_val);
@@ -171,7 +173,7 @@ int main(void)
 			char_to_str[0] = '\n';
 			char_to_str[1] = '\0';
 
-			for (uint8_t i = 0; i < 12; i++) {
+			for (uint8_t i = 0; i < NUM_SERIES_GROUPS_TOTAL_DEFAULT; i++) {
 				sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
 				strncat(out_buf, buf, 20);
 				strncat(out_buf, char_to_str, 3);
