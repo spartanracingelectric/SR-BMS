@@ -9,6 +9,7 @@
 .Logo
 {
 	display: flex;
+	list-style: none;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
@@ -37,8 +38,8 @@
 .Settings-Logo
 {
 	flex: 1;
-	min-width: 175vh;
-	height: 5vh;
+	min-width: 117.5vh;
+	height: 10%;
 	
 	font-size: 20px;
 	font-weight: 500;
@@ -53,33 +54,41 @@
 	height: 10vh;
 	
 	display: flex;
+	list-style: none;
 	flex-direction: row-reverse;
 	text-align: right;
 	font-size: 15px;
 	font-weight: 300;
 }
 
+.Tabs a
+{
+	text-decoration: none;
+	color: inherit;
+}
+
 .General
 {
-	width: 15vh;
+	width: 8%;
+	list-style: none;
 }
 
 .CellManagement
 {
-	width: 30vh;
+	width: 15%;
 }
 
 .Switch
 {
-	width: 15vh;
+	width: 10%;
 }
 
 .Signals
 {
-	width: 15vh;
+	width: 10%;
 }
 
 .Display
 {
-	width: 15vh;
+	width: 8%;
 }
