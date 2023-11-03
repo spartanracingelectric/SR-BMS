@@ -1,0 +1,66 @@
+(Japanese_coding: sjis)
+(function "ECS_1908368"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2019-08-20-07:43:46)
+    (utime 2023-03-07-16:10:32)
+    (interface
+        (port "1" (symbPinId 1) (portType INOUT))
+        (port "2" (symbPinId 2) (portType INOUT))
+    )
+    (property "symbolName" "885382207009")
+)
+
+
+(pinAssign "ECS_1908368"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2019-08-20-07:43:46)
+    (utime 2023-03-07-16:10:32)
+    (interface
+        (port "1" (symbPinId 1) (portName "1") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "2") (portType INOUT))
+    )
+    (internal
+        (funcInst (functionRef "ECS_1908368")
+                (port "1" (match "1"))
+                (port "2" (match "2"))
+        )
+    )
+    (property "usePowerBox" "No")
+    (property "symbolName" "885382207009")
+)
+
+
+(part "885382207009"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2019-08-20-07:43:46)
+    (utime 2023-03-07-16:10:32)
+    (packageRef "885382207009")
+    (pinAssignRef "ECS_1908368")
+    (interface
+        (port "1" (symbPinId 1) (portName "1") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "2") (portType INOUT))
+    )
+    (partClass UNDEF)
+    (useInSchema Y)
+    (useInLayout Y)
+    (inPartsList Y)
+    (partType NORMAL)
+    (placeRestriction FREE)
+    (property "enetNonSeries" "NO")
+    (property "refDesPrefix" "C")
+    (property "description" "Multilayer Ceramic Chip Capacitor WCAP-CSST Series 0805 10000pF X7R0805103K100DFCT1S000")
+    (property "Mouser_Part_Number" "710-885382207009")
+    (property "Mouser_Price/Stock" "https://www.mouser.co.uk/ProductDetail/Wurth-Elektronik/885382207009?qs=0lSvoLzn4L%2FLliJ98PmFYg%3D%3D")
+    (property "Manufacturer_Name" "Wurth Elektronik")
+    (property "Manufacturer_Part_Number" "885382207009")
+    (property "Datasheet_Link" "https://katalog.we-online.com/pbs/datasheet/885382207009.pdf")
+    (property "compAreaTopHeight" 1.35)
+)
+
+

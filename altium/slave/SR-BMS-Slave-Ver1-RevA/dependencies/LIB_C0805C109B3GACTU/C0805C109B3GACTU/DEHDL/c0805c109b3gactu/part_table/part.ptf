@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'C0805C109B3GACTU'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "KEMET", "C0805C109B3GACTU" (!) = "", "C0805", "Other", "80-C0805C109B3GACTU", "https://www.mouser.co.uk/ProductDetail/KEMET/C0805C109B3GACTU?qs=%252BdQmOuGyFcGvMtB75B23qg%3D%3D", "SMD Comm C0G, Ceramic, 1 pF, +/-0.1 pF, 25 VDC, 62.5 VDC, 125C, -55C, C0G, SMD, MLCC, Ultra-Stable, Low Loss, Class I, 0.1 % , 100 GOhms, 11 mg, 0805, 2mm, 1.25mm, 0.78mm, 0.75mm, 0.5mm, 4000, 78  Weeks, 120", "https://content.kemet.com/datasheets/KEM_C1003_C0G_SMD.pdf", "1.1 mm"
+END_PART
+
+END.
