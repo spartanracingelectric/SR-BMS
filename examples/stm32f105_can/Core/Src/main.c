@@ -147,7 +147,21 @@ int main(void)
   LTC_Set_Num_Devices(NUM_DEVICES_DEFAULT);
   LTC_Set_Num_Series_Groups(NUM_SERIES_GROUPS_PER_MOD_DEFAULT);
 
-  CAN1_Start();
+  uint8_t startErr = (uint8_t)CAN1_Start();
+
+	uint32_t testTxMailbox;
+	uint8_t msg[8];
+
+	msg[0] = 0xde;
+	msg[1] = 0xad;
+	msg[2] = 0xbe;
+	msg[3] = 0xef;
+
+	CAN_TxHeaderTypeDef testTx;
+	testTx.IDE = CAN_ID_STD;
+	testTx.StdId = 0x123;
+	testTx.RTR = CAN_RTR_DATA;
+	testTx.DLC = 4;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -161,27 +175,19 @@ int main(void)
 	  	//LED HEARTBEAT
 		if (TimerPacket_FixedPulse(&tp_led_heartbeat)) { LED_Heartbeat_Toggle(); }
 
+		//CAN TX TEST
 		if (TimerPacket_FixedPulse(&tp_can1)) {
-			uint32_t testTxMailbox;
 			uint8_t err;
-			char msg[8];
-			char serial_buf[8];
-			msg[0] = 0xde;
-			msg[1] = 0xad;
-			msg[2] = 0xbe;
-			msg[3] = 0xef;
-			CAN_TxHeaderTypeDef testTx;
-			testTx.IDE = CAN_ID_STD;
-			testTx.StdId = 0x123;
-			testTx.RTR = CAN_RTR_DATA;
-			testTx.DLC = 8;
-
-			err = (uint8_t)CAN1_Tx(&testTx, msg, &testTxMailbox);
-
-			sprintf(serial_buf, "0x%X\n", err);
+			char serial_buf[32];
 
 
-			USB_Transmit(serial_buf, strlen(serial_buf));
+			//if (CAN1_GetTxMailboxesFreeLevel()) {
+				err = (uint8_t)CAN1_Tx(&testTx, msg, &testTxMailbox);
+
+				sprintf(serial_buf, "0x%X 0x%X 0x%lX\n", startErr, err, CAN1_CheckError());
+
+				USB_Transmit(serial_buf, strlen(serial_buf));
+			//}
 		}
 
 		//READ CELL VOLTAGE

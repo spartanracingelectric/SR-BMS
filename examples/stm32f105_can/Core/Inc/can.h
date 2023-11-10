@@ -46,6 +46,8 @@ void MX_CAN2_Init(void);
 /* USER CODE BEGIN Prototypes */
 HAL_StatusTypeDef CAN1_Start();
 HAL_StatusTypeDef CAN1_Tx(const CAN_TxHeaderTypeDef *pHeader, const uint8_t aData[], uint32_t *pTxMailbox);
+uint32_t CAN1_CheckError();
+uint32_t CAN1_GetTxMailboxesFreeLevel();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
