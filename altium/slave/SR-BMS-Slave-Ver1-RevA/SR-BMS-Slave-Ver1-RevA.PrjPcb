@@ -101,20 +101,12 @@ DocumentUniqueId=ZTQFOJTK
 
 [Document4]
 DocumentPath=bmsSlave_conn.SchDoc
-<<<<<<< HEAD
-AnnotationEnabled=1
-=======
 AnnotationEnabled=0
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-<<<<<<< HEAD
-AnnotateOrder=-1
-=======
 AnnotateOrder=1
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -128,17 +120,10 @@ DocumentUniqueId=EVHMFABL
 DocumentPath=bmsSlave_cells.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
-<<<<<<< HEAD
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-=======
 AnnotationIndexControlEnabled=1
 AnnotateSuffix=
 AnnotateScope=All
 AnnotateOrder=2
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -150,20 +135,12 @@ DocumentUniqueId=FEULLKGJ
 
 [Document6]
 DocumentPath=bmsSlave_isospi.SchDoc
-<<<<<<< HEAD
-AnnotationEnabled=1
-=======
 AnnotationEnabled=0
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-<<<<<<< HEAD
-AnnotateOrder=-1
-=======
 AnnotateOrder=3
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -1140,25 +1117,6 @@ Type117=1
 Type118=1
 Type119=1
 Type120=1
-<<<<<<< HEAD
-Type121=1
-Type122=1
-Type123=1
-Type124=1
-Type125=1
-Type126=1
-Type127=1
-Type128=1
-Type129=1
-Type130=1
-Type131=1
-Type132=1
-Type133=1
-Type134=1
-Type135=1
-Type136=1
-=======
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 
 [Difference Levels]
 Type1=1
@@ -1229,15 +1187,6 @@ Type65=1
 Type66=1
 Type67=1
 Type68=1
-<<<<<<< HEAD
-Type69=1
-Type70=1
-Type71=1
-Type72=1
-Type73=1
-Type74=1
-=======
->>>>>>> 1e1d63a873fe33d38badcb7cc2000bbf617224da
 
 [Electrical Rules Check]
 Type1=1
@@ -1359,7 +1308,6 @@ Type116=2
 Type117=3
 Type118=3
 Type119=3
-MultiChannelAlternate=0
 AlternateItemFail=3
 Type122=2
 Type123=1
