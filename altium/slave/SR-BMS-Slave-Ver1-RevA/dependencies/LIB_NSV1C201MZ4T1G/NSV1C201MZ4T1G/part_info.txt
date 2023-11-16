@@ -1,0 +1,9 @@
+Manufacturer=onsemi
+PartNumber=NSV1C201MZ4T1G
+PartCategory=Transistor
+PackageCategory=SOT223 (3-Pin)
+PinCount=4
+Version=2.2
+Released=2017-06-16 15:14:00
+Downloaded=2023-10-28 03:51:45
+3D=Y

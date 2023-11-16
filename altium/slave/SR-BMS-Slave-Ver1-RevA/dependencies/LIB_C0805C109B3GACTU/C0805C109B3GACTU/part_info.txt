@@ -1,0 +1,9 @@
+Manufacturer=KEMET
+PartNumber=C0805C109B3GACTU
+PartCategory=Capacitor
+PackageCategory=Other
+PinCount=2
+Version=6.1
+Released=2021-06-30 22:51:33
+Downloaded=2023-11-01 21:48:09
+3D=Y
