@@ -3,7 +3,7 @@
 	height: 10vh;
 	display: flex;
 	flex-direction: row;
-	background-color: #5f9ea0;
+	background-color: darkblue;
 }
 
 .Logo
@@ -18,13 +18,11 @@
 
 .Title-Logo
 {
-	width: 60vh;
-	text-align: center;
-	
-	font-size: 30px;
-	font-weight: 500;
-	font-family: 'sans-serif';
-	color: black;
+	width: 35%;
+	height: 40%;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	padding-left: 20px;
 }
 
 .Settings
@@ -34,6 +32,7 @@
 	flex-direction: column;
 	align-items: right;
 	justify-content: center;
+	color: white;
 
 	padding-right: 2%;
 }
@@ -47,10 +46,9 @@
 	padding-bottom: 1%;
 	padding-top: 1%;
 	
-	font-size: 20px;
-	font-weight: 500;
+	font-size: 140%;
+	font-weight: bold;
 	font-family: 'sans-serif';
-	color: black;
 	text-align: right;
 }
 
@@ -64,7 +62,7 @@
 	flex-direction: row-reverse;
 	text-align: right;
 	font-size: 15px;
-	font-weight: 300;
+	font-weight: 110%;
 }
 
 .Tabs a
@@ -77,6 +75,12 @@
 {
 	width: 8%;
 	list-style: none;
+}
+
+.General:hover
+{
+	color: yellow;
+	font-weight: bold;
 }
 
 .CellManagement

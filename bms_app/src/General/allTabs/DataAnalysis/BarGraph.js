@@ -21,7 +21,7 @@ function BarGraph ({barData, options})
 
 	return (
         	<div>
-        		<Bar data={barData} options={options} />
+        		<Bar data={barData} options={options} width = "500" height = "300" />
         	</div>
 	);
 }

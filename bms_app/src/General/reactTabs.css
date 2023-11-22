@@ -3,10 +3,11 @@
 }
 
 .react-tabs__tab-list {
-  border-bottom: 3px solid #aaa;
+  border-top: 3px solid yellow;
+  border-bottom: 3px solid yellow;
   margin: 0 0 10px;
   padding: 0;
-  background-color: crimson;
+  background-color: black;
 }
 
 .react-tabs__tab {
@@ -18,13 +19,13 @@
   list-style: none;
   padding: 6px 10px;
   cursor: pointer;
-  background-color: tan;
+  color: yellow;
 }
 
 .react-tabs__tab--selected {
-  background-color: #5f9ea0;
-  border-color: #aaa;
-  font-color: black;
+  background-color: darkblue;
+  border-color: yellow;
+  color: yellow;
   border-radius: 5px 5px 0 0;
 }
 

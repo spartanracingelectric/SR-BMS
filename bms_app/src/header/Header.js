@@ -1,4 +1,5 @@
 import './Header.css';
+import logo from './SR_logo_original.png';
 
 function AppHeader()
 {
@@ -6,7 +7,9 @@ function AppHeader()
 		<header className = "App-Header">
 			<div className = "Logo">
 					<li>
-      					<a href= "/" className = "Title-Logo"> Logo </a>
+      					<a href= "/">
+						  <img  src = {logo} alt = "SAELogo" className = "Title-Logo" /> 
+						</a>
 					</li>
       			</div>
       			<div className = "Settings">

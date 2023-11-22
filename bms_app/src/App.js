@@ -1,8 +1,8 @@
 import './App.css';
 import AppHeader from './header/Header.js';
-import TabPage from './Components/Tabs';
-import Home from './home.js'
-import { redirect, Route, Routes } from "react-router-dom"
+import TabPage from './General/Tabs';
+import Home from './homepage/home.js'
+import { Route, Routes } from "react-router-dom"
 
 /*
     AppHeader controls top portion of GUI
