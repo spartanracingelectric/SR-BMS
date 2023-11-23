@@ -430,6 +430,10 @@ DItemRevisionGUID=
 DocumentPath=bmsSlave 11-6-2023 5-11-44 PM.WAS
 DItemRevisionGUID=
 
+[GeneratedDocument3]
+DocumentPath=Project Outputs for SR-BMS-Slave-Ver1-RevA\Design Rule Check - bmsSlave.html
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0
