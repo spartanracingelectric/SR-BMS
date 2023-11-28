@@ -47,9 +47,10 @@ function DataAnalysis() {
 				},
 				title: {
 					display: true,
-					text: 'N/A',
+					text: 'Voltage',
 					color: 'black'
-				}
+				},
+				suggestedMax: 4.5
 			},
 			x: {
 				ticks: {
@@ -60,7 +61,7 @@ function DataAnalysis() {
 				},
 				title: {
 					display: true,
-					text: 'Cell Size',
+					text: 'Cell Number',
 					color: 'black'
 				}
 			}
@@ -91,7 +92,7 @@ function DataAnalysis() {
 		const response = await fetch(url1, {
         		method: 'GET',
         		headers: {},
-      		});
+		}).catch(error => console.error(error));
       		
       		const result = await response.json();
       		const obj = JSON.stringify(result, null, 4);
@@ -121,14 +122,14 @@ function DataAnalysis() {
 				<div className = "GraphTabs">
 					<StateButton bName = {'Cell Voltage'} barData = {barData} setBarData = {setBarData} 
 						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Vdata} 	
-						dTitle = {'Voltage'} bgColor = {'white'} yTitle = {'Voltage (V)'} xTitle = {'Cell Size'}/>
+						dTitle = {'Voltage'} bgColor = {'white'} yTitle = {'Voltage (V)'} xTitle = {'Cell Number'}/>
 					<StateButton bName = {'Temperature'} barData = {barData} setBarData = {setBarData} 
 						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Tdata} 
-						dTitle = {'Temperature'} bgColor = {'darkgreen'} yTitle = {'Temperature (C)'} 
-						xTitle = {'Cell Size'}/>
+						dTitle = {'Temperature'} bgColor = {'white'} yTitle = {'Temperature (C)'} 
+						xTitle = {'Cell Number'}/>
 					<StateButton bName = {'IV'} barData = {barData} setBarData = {setBarData} options = {options} 
 						setOptions = {setOptions} cellGroups = {Vdata} gData = {Idata} dTitle = {'IV'} 
-						bgColor = {'lightgreen'} yTitle = {'Current (I)'} xTitle = {'Voltage'}/>
+						bgColor = {'white'} yTitle = {'Current (I)'} xTitle = {'Voltage'}/>
 					&nbsp;
         				&nbsp;
         				<button className = "Refresh" onClick={Refresh}> Refresh </button>

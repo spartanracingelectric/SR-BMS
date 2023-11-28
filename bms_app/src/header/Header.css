@@ -9,6 +9,7 @@
 .Logo
 {
 	width: 30%;
+	height: 90%;
 	display: flex;
 	list-style: none;
 	flex-direction: row;
