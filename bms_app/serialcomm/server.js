@@ -13,7 +13,7 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-const myPort = new SerialPort({path: "COM5", 
+const myPort = new SerialPort({path: "COM4", 
 	baudRate: 9600
 });
 const parser = myPort.pipe(new ReadlineParser({ delimiter: '\r\n' }));
