@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'NSV1C201MZ4T1G'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "onsemi", "NSV1C201MZ4T1G" (!) = "", "SOT230P700X175-4N", "SOT223 (3-Pin)", "863-NSV1C201MZ4T1G", "https://www.mouser.co.uk/ProductDetail/onsemi/NSV1C201MZ4T1G?qs=abmNkq9no6CNkkQTLXtvJQ%3D%3D", "Bipolar Transistors - BJT 100V NPN LOW VCE(SAT) TRA", "http://www.onsemi.com/pub/Collateral/NSS1C201MZ4-D.PDF", "1.75 mm"
+END_PART
+
+END.
