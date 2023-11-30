@@ -1,8 +1,9 @@
-const express = require('express'); //REST API for communication between frontend and backend
-const cors = require('cors'); //ensures we are sending right headers
+const express = require('express');			//REST API for communication between frontend and backend
+const cors = require('cors');				//ensures we are sending right headers
 
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
+
 
 const app = express();
 const port = 8000;
@@ -17,7 +18,7 @@ const myPort = new SerialPort({
 const parser = myPort.pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
 //object that stores the data sent from board
-var data = {
+var dataPackage = {
 	volt: [Math.floor(Math.random() * 5), 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3],
 	temp: [Math.floor(Math.random() * 5), 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1],
 	curr: [Math.floor(Math.random() * 5), 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2],
@@ -29,12 +30,13 @@ var data = {
 //Send signal (h) to board to begin sending data
 function getData() {
 	myPort.write("h");
-
-	return data;	
+	
+	return dataPackage;	
 }
 
 //frontend requests data to /graphdata to which backend responds and sends data object
 app.get('/graphdata', (req, res) => {
+
     res.json(getData());
 });
 
@@ -46,11 +48,28 @@ app.listen(port, () => {
 myPort.on('open', onOpen);
 parser.on('data', onData);
 
+var arrayIndex = 0;
+var mode = "";
+
 function onOpen() {
 	console.log("Open Connection");
 }
 
 //sent data is dealt with this function
 function onData(data) {
-	console.log("Got: " + data);
+	//console.log("Got: " + data);
+
+	if (data === "v" || data === "t" || data === "i") {
+		mode = data;
+	}
+
+	if(mode === "v") {
+		dataPackage.volt[arrayIndex] = data;
+	} else if (mode === "t") {
+		dataPackage.temp[arrayIndex] = data;
+	} else if (mode === "i") {
+		dataPackage.curr[arrayIndex] = data;
+	}
+
+	arrayIndex = (arrayIndex + 1) % 12;
 }

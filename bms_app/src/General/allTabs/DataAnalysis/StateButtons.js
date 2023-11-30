@@ -1,21 +1,23 @@
 import './StateButtons.css';
 
 /*
-	bName-button text
-	barData-graph data object for display
-	setBarData-function to update barData
-	options-graph options object for display
-	setOptions-function to update options
-	cellGroups-array holding labels for x-axis bars
-	gData-array holding either Voltage/Temp/IV data
-	dTitle-name indicating which data is being displayed
-	bgColor-color for the bars
-	yTitle-label of the y-axis
-	xTitle-label of thex-axis
+	bName		-button text
+	barData		-graph data object for display
+	setBarData	-function to update barData
+	options		-graph options object for display
+	setOptions	-function to update options
+	cellGroups	-array holding labels for x-axis bars
+	gData		-array holding either Voltage/Temp/IV data
+	dTitle		-name indicating which data is being displayed
+	bgColor		-color for the bars
+	yTitle		-label of the y-axis
+	xTitle		-label of thex-axis
+	gMode		-currently displayed graph data
+	setGmode	-function to update mode
 */
 
 function StateButton({bName, barData, setBarData, options, setOptions, 
-	cellGroups, gData, dTitle, bgColor, yTitle, xTitle}) {
+	cellGroups, gData, dTitle, bgColor, yTitle, xTitle, setGmode}) {
 
 	function changeState() {
 		setBarData(barData => {
@@ -50,6 +52,7 @@ function StateButton({bName, barData, setBarData, options, setOptions,
 				}
 			}
 		});
+		setGmode(dTitle);
 	}
 	
 	return(

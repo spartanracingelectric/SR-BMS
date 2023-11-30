@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import './DataAnalysis.css';
 import BarGraph from './BarGraph.js';
 import DataTitles from './StaticData.js';
@@ -9,7 +9,7 @@ let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const url1 = "http://localhost:8000/graphdata";
 
 function DataAnalysis() {
-	
+
 	//holds string value fetched from server 8000 from server.js in serial comm
 	//message is for debugging
 	//const [message, setMessage] = useState("");
@@ -19,6 +19,7 @@ function DataAnalysis() {
 		Refresh() updates these states
 		Note: not sure if we need IVdata if we have Voltage and Current data
 	*/
+	const [Gmode, setGmode] = useState('Voltage');
 	const [Vdata, setVdata] = useState (initialData);
 	const [Tdata, setTdata] = useState (initialData);
 	const [Idata, setIdata] = useState (initialData);
@@ -80,15 +81,52 @@ function DataAnalysis() {
 	
 	const [BData, setData] = useState(initialData);
 
+	useEffect(() => {
+		//Implementing the setInterval method
+		const interval = setInterval(Refresh, 3000);
+
+		//Clearing the interval
+		return () => clearInterval(interval);
+	});
+
+	function UpdateView() {
+		if (Gmode === 'Voltage') {
+			setBarData(barData => {
+				return {
+					labels: cellGroups,
+					datasets: [{
+						label: 'Voltage',
+						data: Vdata,
+						backgroundColor: 'white'
+					}]
+				}
+			});
+		} else if (Gmode === 'Temperature') {
+			setBarData(barData => {
+				return {
+					labels: cellGroups,
+					datasets: [{
+						label: 'Temperature',
+						data: Tdata,
+						backgroundColor: 'white'
+					}]
+				}
+			});
+		} else if (Gmode === 'IV') {
+			setBarData(barData => {
+				return {
+					labels: Vdata,
+					datasets: [{
+						label: 'IV',
+						data: Idata,
+						backgroundColor: 'white'
+					}]
+				}
+			});
+		}
+	}
+
 	const Refresh = async () => {
-		/*UpdateVoltage();
-		UpdateCurrent();
-		UpdateTemperature();
-		
-		UpdateData();
-		
-		Backend();*/
-		
 		const response = await fetch(url1, {
         		method: 'GET',
         		headers: {},
@@ -102,7 +140,8 @@ function DataAnalysis() {
 			setVdata(arr.volt);
       		setTdata(arr.temp);
       		setIdata(arr.curr);
-      		setData(arr.static);
+			setData(arr.static);
+			UpdateView();
 	}
 
 	return (
@@ -118,21 +157,23 @@ function DataAnalysis() {
 			<div className = "Graph">
 				&nbsp;
 				&nbsp;
+				{/*<text> {Gmode} </text>*/}
 				{/*<text> {message} </text>*/}
 				<div className = "GraphTabs">
-					<StateButton bName = {'Cell Voltage'} barData = {barData} setBarData = {setBarData} 
-						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Vdata} 	
-						dTitle = {'Voltage'} bgColor = {'white'} yTitle = {'Voltage (V)'} xTitle = {'Cell Number'}/>
+					<StateButton bName={'Cell Voltage'} barData={barData} setBarData={setBarData}
+						options={options} setOptions={setOptions} cellGroups={cellGroups} gData={Vdata}
+						dTitle={'Voltage'} bgColor={'white'} yTitle={'Voltage (V)'} xTitle={'Cell Number'}
+						setGmode={setGmode}/>
 					<StateButton bName = {'Temperature'} barData = {barData} setBarData = {setBarData} 
 						options = {options} setOptions = {setOptions} cellGroups = {cellGroups} gData = {Tdata} 
 						dTitle = {'Temperature'} bgColor = {'white'} yTitle = {'Temperature (C)'} 
-						xTitle = {'Cell Number'}/>
+						xTitle={'Cell Number'} setGmode={setGmode}/>
 					<StateButton bName = {'IV'} barData = {barData} setBarData = {setBarData} options = {options} 
 						setOptions = {setOptions} cellGroups = {Vdata} gData = {Idata} dTitle = {'IV'} 
-						bgColor = {'white'} yTitle = {'Current (I)'} xTitle = {'Voltage'}/>
+						bgColor={'white'} yTitle={'Current (I)'} xTitle={'Voltage'} setGmode={setGmode}/>
 					&nbsp;
         				&nbsp;
-        				<button className = "Refresh" onClick={Refresh}> Refresh </button>
+					{/*<button className="Refresh" onClick={Refresh}> Refresh </button>*/}
 				</div>
 				&nbsp;
 					<BarGraph barData = {barData} options = {options}/>
