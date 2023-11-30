@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART '885382207009'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Wurth Elektronik", "885382207009" (!) = "", "CAPC2012X135N", "Capacitor Chip Non-polarised", "710-885382207009", "https://www.mouser.co.uk/ProductDetail/Wurth-Elektronik/885382207009?qs=0lSvoLzn4L%2FLliJ98PmFYg%3D%3D", "Multilayer Ceramic Chip Capacitor WCAP-CSST Series 0805 10000pF X7R0805103K100DFCT1S000", "https://katalog.we-online.com/pbs/datasheet/885382207009.pdf", "1.35 mm"
+END_PART
+
+END.
