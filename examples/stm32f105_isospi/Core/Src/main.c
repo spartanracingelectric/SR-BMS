@@ -40,7 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define NUM_DEVICES_DEFAULT					2	//2 slave boards
+#define NUM_DEVICES_DEFAULT					1	//2 slave boards
 #define NUM_SERIES_GROUPS_PER_MOD_DEFAULT	12	//12 in series
 #define NUM_SERIES_GROUPS_TOTAL_DEFAULT		(NUM_DEVICES_DEFAULT * NUM_SERIES_GROUPS_PER_MOD_DEFAULT) //24 series groups
 
@@ -169,7 +169,7 @@ int main(void)
 			char_to_str[1] = '\0';
 
 			for (uint8_t i = 0; i < NUM_SERIES_GROUPS_TOTAL_DEFAULT; i++) {
-				sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
+				sprintf(buf, "C%u:%u/1e4 V", i+1, read_val[i]);
 				strncat(out_buf, buf, 20);
 				strncat(out_buf, char_to_str, 3);
 			}
