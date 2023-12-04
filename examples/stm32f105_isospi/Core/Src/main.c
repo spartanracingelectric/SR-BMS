@@ -168,12 +168,16 @@ int main(void)
 			char_to_str[0] = '\n';
 			char_to_str[1] = '\0';
 
+      strncat(out_buf, "$", 1);
 			for (uint8_t i = 0; i < NUM_SERIES_GROUPS_TOTAL_DEFAULT; i++) {
-				sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
+				// sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
+        sprintf(buf, "c%u:%u,", i+1, read_val[i]);
 				strncat(out_buf, buf, 20);
-				strncat(out_buf, char_to_str, 3);
+				// strncat(out_buf, char_to_str, 3);
 			}
-			strncat(out_buf, char_to_str, 3);
+      strncat(out_buf, "@", 1);
+
+			// strncat(out_buf, char_to_str, 3);
 
 			USB_Transmit(out_buf, strlen(out_buf));
 		}
