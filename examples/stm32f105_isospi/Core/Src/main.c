@@ -164,7 +164,8 @@ int main(void)
 		if (TimerPacket_FixedPulse(&tp_ltc)) {
 			char buf[20];
 			char out_buf[1024] = "";
-			char char_to_str[2];
+			char char_to_str_pre[1];
+			char char_to_str_post[3];
 
 			LTC_ReadRawCellVoltages((uint16_t *)read_val);
 
@@ -172,17 +173,18 @@ int main(void)
 			LTC_WriteClearCellVoltageRegisters();
 			LTC_WriteStartCellVoltageConversion(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL);
 
-			char_to_str[0] = '\n';
-			char_to_str[1] = '\0';
-
-      strncat(out_buf, "$", 1);
+			char_to_str_pre[0] = '$'; //Start delimiter for voltage
+			strncat(out_buf, char_to_str_pre, 1);
 			for (uint8_t i = 0; i < NUM_SERIES_GROUPS_TOTAL_DEFAULT; i++) {
 				// sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
-        sprintf(buf, "c%u:%u,", i+1, read_val[i]);
+				sprintf(buf, "c%u:%u,", i+1, read_val[i]);
 				strncat(out_buf, buf, 20);
-				// strncat(out_buf, char_to_str, 3);
 			}
-      strncat(out_buf, "@", 1);
+			char_to_str_post[0] = '@'; //End delimiter for voltage
+			char_to_str_post[1] = '\n';
+			char_to_str_post[2] = '\0';
+			strncat(out_buf, char_to_str_post, 3);
+			//strncat(out_buf, "@", 1);
 
 			// strncat(out_buf, char_to_str, 3);
 
