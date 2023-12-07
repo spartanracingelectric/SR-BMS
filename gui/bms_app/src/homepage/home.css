@@ -1,0 +1,29 @@
+.HomePage 
+{   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Divider
+{
+    width: 100%;
+    height: 5px;
+    background-color: yellow;
+}
+
+.Img
+{
+    padding-bottom: 5px;
+}
+
+.Disclaimer
+{
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+    font-size: 130%;
+    
+    background-color: white;
+}

@@ -7,9 +7,18 @@ TODO<br/>
 <br/>
 
 ## Environment Setup
+### Version Control
 1. Install git ([Windows](https://git-scm.com/downloads))
 2. Clone this repo into any reachable folder using, in a command line of your choice (WSL Ubuntu, PowerShell, Terminal, etc), `git clone https://github.com/spartanracingelectric/SR-BMS.git`
     1. Change your branch if necessary by using `git checkout <BRANCH_NAME>`
+###  GUI Setup
+1. cd gui/bms_app
+	- install necessary react scripts using 'npm install react-scripts' 
+2. Backend and frontend must be run concurrently 
+	- frontend: open terminal in bms_app folder use: 'npm start' 
+	- backend: open terminal in serialcomm folder 'npm run dev' 
+	- backend deals w/ serial communication 
+	- to view the backend use the url: "http://localhost:8000/graphdata" 
 <br/>
 
 ## SR BMS R&D Senior Project Team
@@ -21,3 +30,8 @@ _Abegail Palad_, Project Member, Firmware & Software<br/>
 
 ## Links
 [Spartan Racing Website](https://www.sjsuformulasae.com/)<br/>
+
+## In Progress
+1. change graph info dynamically 
+	-if it takes long default to just show graph info using list 
+2. UML diagrams
