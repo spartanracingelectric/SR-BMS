@@ -44,7 +44,7 @@
 #define NUM_SERIES_GROUPS_PER_MOD_DEFAULT	12	//12 in series
 #define NUM_SERIES_GROUPS_TOTAL_DEFAULT		(NUM_DEVICES_DEFAULT * NUM_SERIES_GROUPS_PER_MOD_DEFAULT) //24 series groups
 
-#define LTC_DELAY_MS			1000 //500ms update delay
+#define LTC_DELAY_MS			1000 //1000ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
 
 /* USER CODE END PD */
@@ -139,10 +139,13 @@ int main(void)
   LED_Heartbeat_Init();
 
   //Pull SPI1 nCS HIGH (deselect)
-  LTC_nCS_High();
+  LTC_SPI_nCS_High();
 
   LTC_Set_Num_Devices(NUM_DEVICES_DEFAULT);
   LTC_Set_Num_Series_Groups(NUM_SERIES_GROUPS_PER_MOD_DEFAULT);
+
+  //Something with this implementation is wacky, keep out for now. WIP
+  //LTC_InitCellMonitor();
 
   /* USER CODE END 2 */
 
@@ -164,6 +167,10 @@ int main(void)
 			char char_to_str[2];
 
 			LTC_ReadRawCellVoltages((uint16_t *)read_val);
+
+			//Remeasure cell voltages
+			LTC_WriteClearCellVoltageRegisters();
+			LTC_WriteStartCellVoltageConversion(MD_FILTERED, DCP_DISABLED, CELL_CH_ALL);
 
 			char_to_str[0] = '\n';
 			char_to_str[1] = '\0';

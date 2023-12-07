@@ -25,7 +25,8 @@ static const uint16_t LTC_CMD_RDCV[6] = {
 
 static const uint8_t LTC_SPI_TX_BIT_OFFSET = 0; //Num bits to shift RX status code
 static const uint8_t LTC_SPI_RX_BIT_OFFSET = 4; //Num bits to shift RX status code
-static const uint8_t REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
+static const uint8_t TX_REG_LEN = 6; // number of bytes in the register + 2 bytes for the PEC
+static const uint8_t RX_REG_LEN = 8; // number of bytes in the register + 2 bytes for the PEC
 static const uint8_t LTC_SERIES_GROUPS_PER_RDCV = 3; //Number of cell voltage groups per 8 byte register
 
 static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac,  //!<precomputed CRC15 Table
@@ -55,6 +56,113 @@ static const unsigned int crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 
 
 static uint8_t num_devices = 1; //Keep visibility within this file
 static uint8_t num_series_groups = 12; //Number of series groups
+static uint8_t cell_monitor_type = CELL_MON_LTC6813_1;
+static uint16_t cell_hard_undervoltage	= 27000;
+static uint16_t cell_hard_overvoltage	= 42000;
+
+/* Set number of LTC6813/slave devices */
+void LTC_Set_Num_Devices(uint8_t num)
+{
+	if (num) num_devices = num; //Non-zero
+}
+
+/* Get number of LTC6813/slave devices */
+uint8_t LTC_Get_Num_Devices(void)
+{
+	return num_devices;
+}
+
+/* Set number of series groups per LTC6813/slave */
+void LTC_Set_Num_Series_Groups(uint8_t num)
+{
+	if (num && (num <= 18)) num_series_groups = num; //Non-zero and 18 or less
+}
+
+/* Get number of series groups per LTC6813/slave */
+uint8_t LTC_Get_Num_Series_Groups(void)
+{
+	return num_series_groups;
+}
+
+/* Pull nCS line to SPI1 HIGH */
+void LTC_SPI_nCS_High(void)
+{
+	HAL_GPIO_WritePin(LTC_SPI_nCS_GPIO_Port, LTC_SPI_nCS_Pin, GPIO_PIN_SET); //Pull CS high
+}
+
+/* Pull nCS line to SPI1 LOW */
+void LTC_SPI_nCS_Low(void)
+{
+	HAL_GPIO_WritePin(LTC_SPI_nCS_GPIO_Port, LTC_SPI_nCS_Pin, GPIO_PIN_RESET); //Pull CS high
+}
+
+/* Wrapper for HAL SPI Transmit */
+LTC_SPI_StatusTypeDef LTC_SPI_Transmit(uint8_t *pData, uint16_t Size, uint32_t Timeout)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+
+	LTC_SPI_nCS_Low();
+	hal_ret = HAL_SPI_Transmit(&hspi1, pData, Size, Timeout);
+	while( hspi1.State == HAL_SPI_STATE_BUSY );	//If busy, then wait																// Wait until transmission is complete
+	LTC_SPI_nCS_High();
+	if (hal_ret) { //Non-zero means error
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+	}
+
+	return ret;
+}
+
+/* Wrapper for HAL SPI Receive */
+LTC_SPI_StatusTypeDef LTC_SPI_Receive(uint8_t *pData, uint16_t Size, uint32_t Timeout) {
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+
+	LTC_SPI_nCS_Low();
+	hal_ret = HAL_SPI_Receive(&hspi1, pData, Size, Timeout);
+	while( hspi1.State == HAL_SPI_STATE_BUSY );	//If busy, then wait
+	LTC_SPI_nCS_High();
+	if (hal_ret) { //Non-zero means error
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
+	}
+
+	return ret;
+}
+
+/* Wrapper for HAL SPI TransmitReceive */
+LTC_SPI_StatusTypeDef LTC_SPI_TransmitReceive(uint8_t *pData_Tx, uint16_t Size_Tx, uint8_t *pData_Rx, uint16_t Size_Rx, uint32_t Timeout) {
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+
+	uint8_t *writeArray, *readArray;
+
+	writeArray = malloc(sizeof(uint8_t)*(Size_Tx+Size_Rx));
+	readArray = malloc(sizeof(uint8_t)*(Size_Tx+Size_Rx));
+
+	memset(writeArray,0xFF, Size_Tx+Size_Rx);
+	memcpy(writeArray, pData_Tx, Size_Tx);
+	HAL_Delay(5); //Delay 5ms
+
+	LTC_SPI_nCS_Low();
+	hal_ret = HAL_SPI_TransmitReceive(&hspi1, writeArray, readArray, Size_Tx+Size_Rx, Timeout);
+	while( hspi1.State == HAL_SPI_STATE_BUSY );	//If busy, then wait
+	LTC_SPI_nCS_High();
+	if (hal_ret) { //Non-zero means error
+		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+		ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
+	}
+
+	memcpy(pData_Rx, readArray + Size_Tx, Size_Rx);
+	HAL_Delay(5); //Delay 5ms
+
+	free(writeArray);
+	free(readArray);
+
+	return ret;
+}
 
 /* Calculates  and returns the CRC15 */
 uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
@@ -73,51 +181,349 @@ uint16_t LTC_PEC15_Calc(uint8_t len, //Number of bytes that will be used to calc
 	return(remainder*2);//The CRC15 has a 0 in the LSB so the remainder must be multiplied by 2
 }
 
-/* Set number of LTC6813/slave devices */
-void LTC_Set_Num_Devices(uint8_t num) {
-	if (num) num_devices = num; //Non-zero
-}
+/*
+Generic function to write 68xx commands and write payload data.
+Function calculates PEC for tx_cmd data and the data to be transmitted.
+ */
+void LTC_Write(uint8_t tx_cmd[2], //The command to be transmitted
+			   uint8_t data[] // Payload Data
+			  )
+{
+	const uint8_t CMD_LEN = 4+(8*LTC_Get_Num_Devices());
+	uint8_t *cmd;
+	uint16_t data_pec;
+	uint16_t cmd_pec;
+	uint8_t cmd_index;
 
-/* Get number of LTC6813/slave devices */
-uint8_t LTC_Get_Num_Devices(void) {
-	return num_devices;
-}
+	cmd = (uint8_t *)malloc(CMD_LEN*sizeof(uint8_t));
+	cmd[0] = tx_cmd[0];
+	cmd[1] = tx_cmd[1];
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
 
-/* Set number of series groups per LTC6813/slave */
-void LTC_Set_Num_Series_Groups(uint8_t num) {
-	if (num && (num <= 18)) num_series_groups = num; //Non-zero and 18 or less
-}
+	cmd_index = 4;
+	for (uint8_t current_ic = LTC_Get_Num_Devices(); current_ic > 0; current_ic--)               // Executes for each LTC681x, this loops starts with the last IC on the stack.
+    {	                                                                            //The first configuration written is received by the last IC in the daisy chain
+		for (uint8_t current_byte = 0; current_byte < TX_REG_LEN; current_byte++)
+		{
+			cmd[cmd_index] = data[((current_ic-1)*6)+current_byte];
+			cmd_index = cmd_index + 1;
+		}
 
-/* Get number of series groups per LTC6813/slave */
-uint8_t LTC_Get_Num_Series_Groups(void) {
-	return num_series_groups;
-}
-
-/* Pull nCS line to SPI1 HIGH */
-void LTC_nCS_High(void) {
-	HAL_GPIO_WritePin(LTC_nCS_GPIO_Port, LTC_nCS_Pin, GPIO_PIN_SET); //Pull CS high
-}
-
-/* Pull nCS line to SPI1 LOW */
-void LTC_nCS_Low(void) {
-	HAL_GPIO_WritePin(LTC_nCS_GPIO_Port, LTC_nCS_Pin, GPIO_PIN_RESET); //Pull CS high
-}
-
-/* Wake LTC up from IDLE state into READY state */
-LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
-	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
-	LTC_SPI_StatusTypeDef hal_ret;
-	uint8_t hex_ff = 0xFF;
-
-	LTC_nCS_Low(); //Pull CS low
-
-	hal_ret = HAL_SPI_Transmit(&hspi1, &hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
-	if (hal_ret) { //Non-zero means error
-		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
-		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+		data_pec = LTC_PEC15_Calc(TX_REG_LEN, &data[(current_ic-1)*6]);    // Calculating the PEC for each ICs configuration register data
+		cmd[cmd_index] = (uint8_t)(data_pec >> 8);
+		cmd[cmd_index + 1] = (uint8_t)data_pec;
+		cmd_index = cmd_index + 2;
 	}
 
-	LTC_nCS_High(); //Pull CS high
+	LTC_SPI_Transmit((uint8_t *)cmd, CMD_LEN, 100);
+
+	free(cmd);
+}
+
+/* Generic function to write 68xx commands and read data. Function calculated PEC for tx_cmd data */
+int8_t LTC_Read(uint8_t tx_cmd[2], // The command to be transmitted
+				uint8_t *rx_data // Data to be read
+				)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+
+	const uint8_t ARR_SIZE_REG = LTC_Get_Num_Devices()*RX_REG_LEN;
+	uint8_t cmd[4];
+	uint8_t data[256];
+	int8_t pec_error = 0;
+	uint16_t cmd_pec;
+	uint16_t data_pec;
+	uint16_t received_pec;
+
+	cmd[0] = tx_cmd[0];
+	cmd[1] = tx_cmd[1];
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
+
+	hal_ret = LTC_SPI_TransmitReceive((uint8_t *)cmd, 4, (uint8_t *)data, ARR_SIZE_REG, 100);
+	//HAL_SPI_Receive(&hspi1, (uint8_t *)data, ARR_SIZE_REG, 100);
+
+	for (uint8_t current_ic = 0; current_ic < num_devices; current_ic++) //Executes for each LTC681x in the daisy chain and packs the data
+	{																//into the rx_data array as well as check the received data for any bit errors
+		for (uint8_t current_byte = 0; current_byte < RX_REG_LEN; current_byte++)
+		{
+			rx_data[(current_ic*8)+current_byte] = data[current_byte + (current_ic*RX_REG_LEN)];
+		}
+
+		received_pec = (rx_data[(current_ic*8)+6]<<8) + rx_data[(current_ic*8)+7];
+		data_pec = LTC_PEC15_Calc(6, &rx_data[current_ic*8]);
+
+		if (received_pec != data_pec)
+		{
+		  pec_error = -1;
+		}
+	}
+
+	return(pec_error);
+}
+
+
+/* Wake LTC up from IDLE state into READY state */
+/* May not need this function */
+LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+
+	uint8_t hex_ff = 0xFF;
+
+	ret |= LTC_SPI_Transmit(&hex_ff, 1, 100); //Send byte 0xFF to wake LTC up
+
+	return ret;
+}
+
+/* Wake LTC up from SLEEP state into READY state */
+void LTC_Wakeup_Sleep(void)
+{
+	HAL_Delay(1); //Delay 1ms, change to tick-based later
+	LTC_SPI_nCS_Low(); //Pull CS low
+	HAL_Delay(1); //Delay 1ms, change to tick-based later
+	LTC_SPI_nCS_High(); //Pull CS high
+	HAL_Delay(1); //Delay 1ms, change to tick-based later
+}
+
+int8_t LTC_DriverReadCFGR(uint8_t rx_config[][8])
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+	LTC_SPI_StatusTypeDef hal_ret;
+
+	const uint8_t ARR_SIZE_REG = LTC_Get_Num_Devices()*RX_REG_LEN;
+	uint8_t cmd[4] = {0x00 , 0x02, 0x2b, 0x0a};
+	uint8_t rx_data[ARR_SIZE_REG];
+	int8_t pec_error = 0;
+	uint16_t calc_pec;
+	uint16_t data_pec;
+
+//	LTC_SPI_nCS_Low();
+	hal_ret = LTC_SPI_TransmitReceive((uint8_t *)cmd, 4, (uint8_t *)rx_data, ARR_SIZE_REG, 100);
+//	if (hal_ret) { //Non-zero means error
+//		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+//		ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
+//	}
+//	hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t *)rx_data, ARR_SIZE_REG, 100);
+//	if (hal_ret) { //Non-zero means error
+//		//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
+//		ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
+//	}
+//	LTC_SPI_nCS_High();
+
+	for (uint8_t current_ic = 0; current_ic < LTC_Get_Num_Devices(); current_ic++) { 			//executes for each LTC6804 in the daisy chain and packs the data into the r_config array as well as check the received Config data for any bit errors
+		for (uint8_t current_byte = 0; current_byte < RX_REG_LEN; current_byte++)	{
+			rx_config[current_ic][current_byte] = rx_data[current_byte + (current_ic*RX_REG_LEN)];
+		}
+		calc_pec = (rx_config[current_ic][6]<<8) + rx_config[current_ic][7];
+		data_pec = LTC_PEC15_Calc(6, &rx_config[current_ic][0]);
+		if (calc_pec != data_pec) {
+			pec_error = -1;
+		}
+	}
+
+	return pec_error;
+}
+
+LTC_SPI_StatusTypeDef LTC_DriverReadCFGRA(uint8_t num_devices_arg, uint8_t rx_buf[][8])
+{
+	return LTC_SPI_OK;
+}
+
+LTC_SPI_StatusTypeDef LTC_DriverReadCFGRB(uint8_t num_devices_arg, uint8_t rx_buf[][8])
+{
+	return LTC_SPI_OK;
+}
+
+LTC_SPI_StatusTypeDef LTC_DriverWriteCFGRA(void)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+
+	const uint8_t CMD_LEN = 4+(8*LTC_Get_Num_Devices());
+	uint8_t *cmd;
+	uint16_t cfg_pec;
+	uint8_t cmd_index; //command counter
+	uint8_t tx_cfg[LTC_Get_Num_Devices()][6];
+	uint16_t cmd_pec;
+
+	cmd = (uint8_t *)malloc(CMD_LEN*sizeof(uint8_t));
+	cmd[0] = 0x00; // config register command
+	cmd[1] = 0x01; // config register command
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
+	cmd_index = 4;
+
+	for (uint8_t current_ic = LTC_Get_Num_Devices(); current_ic > 0; current_ic--) { 			// executes for each LTC6804 in daisy chain, this loops starts with the last IC on the stack. The first configuration written is received by the last IC in the daisy chain
+		for (uint8_t current_byte = 0; current_byte < TX_REG_LEN; current_byte++) { // executes for each of the 6 bytes in the CFGR register current_byte is the byte counter
+			cmd[cmd_index] = tx_cfg[current_ic-1][current_byte]; 						//adding the config data to the array to be sent
+			cmd_index = cmd_index + 1;
+		}
+		cfg_pec = LTC_PEC15_Calc(TX_REG_LEN, &tx_cfg[current_ic-1][0]);		// calculating the PEC for each ICs configuration register data
+		cmd[cmd_index] = (uint8_t)(cfg_pec >> 8);
+		cmd[cmd_index + 1] = (uint8_t)cfg_pec;
+		cmd_index = cmd_index + 2;
+	}
+
+	LTC_Wakeup_Sleep();
+
+	ret |= LTC_SPI_Transmit((uint8_t *)cmd, CMD_LEN, 100);
+
+	free(cmd);
+	return LTC_SPI_OK;
+}
+
+LTC_SPI_StatusTypeDef LTC_DriverWriteCFGRB(void)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+
+	const uint8_t CMD_LEN = 4+(8*LTC_Get_Num_Devices());
+	uint8_t *cmd;
+	uint16_t cfg_pec;
+	uint8_t cmd_index; //command counter
+	uint8_t tx_cfg[LTC_Get_Num_Devices()][6];
+	uint16_t cmd_pec;
+
+	cmd = (uint8_t *)malloc(CMD_LEN*sizeof(uint8_t));
+	cmd[0] = 0x00; // config register B command
+	cmd[1] = 0x24; // config register B command
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
+	cmd_index = 4;
+
+	for (uint8_t current_ic = LTC_Get_Num_Devices(); current_ic > 0; current_ic--) { 			// executes for each LTC6804 in daisy chain, this loops starts with the last IC on the stack. The first configuration written is received by the last IC in the daisy chain
+		for (uint8_t current_byte = 0; current_byte < TX_REG_LEN; current_byte++) { // executes for each of the 6 bytes in the CFGR register current_byte is the byte counter
+			cmd[cmd_index] = tx_cfg[current_ic-1][current_byte]; 						//adding the config data to the array to be sent
+			cmd_index = cmd_index + 1;
+		}
+		cfg_pec = (uint16_t)LTC_PEC15_Calc(TX_REG_LEN, &tx_cfg[current_ic-1][0]);		// calculating the PEC for each ICs configuration register data
+		cmd[cmd_index] = (uint8_t)(cfg_pec >> 8);
+		cmd[cmd_index + 1] = (uint8_t)cfg_pec;
+		cmd_index = cmd_index + 2;
+	}
+
+	LTC_Wakeup_Sleep();
+
+	ret |= LTC_SPI_Transmit((uint8_t *)cmd, CMD_LEN, 100);
+
+	free(cmd);
+	return LTC_SPI_OK;
+}
+
+// LTC_ConfigTypeDef cs = configuration struct
+// uint8_t nd			= number of devices/ltc
+// uint8_t cpm			= series cells per module
+// uint8_t tspm			= temp sensors per module
+// uint8_t cmt			= cell monitor type
+LTC_SPI_StatusTypeDef LTC_DriverInitCellMonitor(LTC_ConfigTypeDef cs, uint8_t cpm, uint8_t tspm, uint8_t cmt)
+{
+//	driverSWLTC6804ConfigStruct = configStruct;
+//	driverSWLTC6804TotalNumberOfICs = totalNumberOfLTCs;
+//	driverSWLTC6804MaxNoOfCellPerModule = noOfCellPerModule;
+//	driverSWLTC6804MaxNoOfTempSensorPerModule = noOfTempSensorPerModule;
+
+	uint8_t rxConfig [num_devices][8];
+	uint8_t LTCScanCount = 0;
+	int8_t returnPEC = -1;
+
+	LTC_Wakeup_Sleep();
+
+	//Attempt up to 5 times
+	while((LTCScanCount < 5) && (returnPEC == -1)){
+		returnPEC =	LTC_DriverReadCFGR(rxConfig);
+
+		LTC_Wakeup_Sleep();
+
+		LTC_DriverWriteCFGRA();
+
+		if (cmt == CELL_MON_LTC6812_1 || cmt == CELL_MON_LTC6813_1){
+			LTC_DriverWriteCFGRB();
+		}
+
+		LTC_Wakeup_Sleep();
+		LTCScanCount++;
+	}
+
+	return LTC_SPI_OK;
+}
+
+/* Initialize cell configurations to LTC */
+LTC_SPI_StatusTypeDef LTC_InitCellMonitor(void)
+{
+	LTC_ConfigTypeDef cfg_struct;
+	cfg_struct.gpio1                    = true;	// Do not pull down this pin (false = pull down)
+	cfg_struct.gpio2                    = true;
+	cfg_struct.gpio3                    = true;
+	cfg_struct.gpio4                    = true;
+	cfg_struct.gpio5                    = true;
+	cfg_struct.gpio6                    = true;
+	cfg_struct.gpio7                    = true;
+	cfg_struct.gpio8                    = true;
+	cfg_struct.gpio9                    = true;
+	cfg_struct.ref_on		            = true;
+	cfg_struct.adc_option               = true;
+	cfg_struct.num_cells                = num_series_groups;
+	cfg_struct.discharge_enable_mask    = 0x00000000;
+	cfg_struct.discharge_timeout        = 0;
+	cfg_struct.cell_undervoltage_limit  = cell_hard_undervoltage;
+	cfg_struct.cell_overvoltage_limit   = cell_hard_overvoltage;
+	LTC_DriverInitCellMonitor(cfg_struct, 18, 12, cell_monitor_type);
+
+	// Safety signal is managed by the controller, it is configured as open drain and will be kept low by. watchdog will make the output to be released.
+	//driverHWSwitchesSetSwitchState(SWITCH_SAFETY_OUTPUT,SWITCH_RESET);
+
+	//modPowerElectronicsCellMonitorsTypeActive = (configCellMonitorICTypeEnum)modPowerElectronicsGeneralConfigHandle->cellMonitorType;
+
+	return LTC_SPI_OK;
+}
+
+/* Clear cell voltage registers for next measurement */
+LTC_SPI_StatusTypeDef LTC_WriteClearCellVoltageRegisters(void)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+
+	uint8_t cmd[4];
+	uint16_t cmd_pec;
+
+	cmd[0] = 0x07;
+	cmd[1] = 0x11;
+	cmd_pec = LTC_PEC15_Calc(2, cmd);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec );
+
+	LTC_Wakeup_Sleep();
+
+	ret |= LTC_SPI_Transmit((uint8_t *)cmd, 4, 100);
+
+	return ret;
+}
+
+/* Start next measurement of cell voltages */
+LTC_SPI_StatusTypeDef LTC_WriteStartCellVoltageConversion(uint8_t adc_mode, uint8_t discharge_permit, uint8_t ch_to_conv)
+{
+	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
+
+	uint8_t cmd[4];
+	uint16_t cmd_pec;
+	uint8_t adcv[2]; //!< Cell Voltage conversion command.
+
+	adcv[0] = ((adc_mode & 0x02) >> 1) + 0x02;
+	adcv[1] = ((adc_mode & 0x01) << 7) + 0x60 + (discharge_permit<<4) + ch_to_conv;
+
+	cmd[0] = adcv[0];
+	cmd[1] = adcv[1];
+	cmd_pec = LTC_PEC15_Calc(2, adcv);
+	cmd[2] = (uint8_t)(cmd_pec >> 8);
+	cmd[3] = (uint8_t)(cmd_pec);
+
+	LTC_Wakeup_Sleep();
+
+	ret |= LTC_SPI_Transmit((uint8_t *)cmd, 4, 100);
 
 	return ret;
 }
@@ -126,7 +532,7 @@ LTC_SPI_StatusTypeDef LTC_Wakeup_Idle(void) {
 LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint16_t *read_voltages) {
 	LTC_SPI_StatusTypeDef ret = LTC_SPI_OK;
 	LTC_SPI_StatusTypeDef hal_ret;
-	const uint8_t ARR_SIZE_REG = LTC_Get_Num_Devices()*REG_LEN;
+	const uint8_t ARR_SIZE_REG = LTC_Get_Num_Devices()*RX_REG_LEN;
 	uint8_t read_voltages_reg[ARR_SIZE_REG];
 
 	// CMD0 write: CC[8:10]
@@ -142,27 +548,27 @@ LTC_SPI_StatusTypeDef LTC_ReadRawCellVoltages(uint16_t *read_voltages) {
 		cmd[2] = (uint8_t)(cmd_pec >> 8);
 		cmd[3] = (uint8_t)(cmd_pec);
 
-		LTC_Wakeup_Idle(); //Wake LTC up
+		LTC_Wakeup_Sleep(); //Wake LTC up
 
-		LTC_nCS_Low(); //Pull CS low
-
+		LTC_SPI_nCS_Low(); //Pull CS low
+		//hal_ret = LTC_SPI_TransmitReceive((uint8_t *)cmd, 4, (uint8_t *)read_voltages_reg, ARR_SIZE_REG, 100);
 		hal_ret = HAL_SPI_Transmit(&hspi1, (uint8_t *)cmd, 4, 100);
 		if (hal_ret) { //Non-zero means error
 			//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
 			ret |= (1 << (hal_ret+LTC_SPI_TX_BIT_OFFSET)); //TX error
 		}
-
 		hal_ret = HAL_SPI_Receive(&hspi1, (uint8_t *)read_voltages_reg, ARR_SIZE_REG, 100);
 		if (hal_ret) { //Non-zero means error
 			//Shift 1 by returned HAL_StatusTypeDef value to get LTC_SPI_StatusTypeDef equivalent
 			ret |= (1 << (hal_ret+LTC_SPI_RX_BIT_OFFSET)); //RX error
 		}
+		LTC_SPI_nCS_High(); //Pull CS high
+
 		for (uint8_t j = 0; j < LTC_Get_Num_Devices(); j++) {
-			memcpy(read_voltages+(i*LTC_SERIES_GROUPS_PER_RDCV)+(j*LTC_Get_Num_Series_Groups()), read_voltages_reg+(j*REG_LEN), sizeof(read_voltages_reg)-(2*sizeof(read_voltages_reg[0])) );
+			memcpy(read_voltages+(i*LTC_SERIES_GROUPS_PER_RDCV)+(j*LTC_Get_Num_Series_Groups()), read_voltages_reg+(j*RX_REG_LEN), sizeof(read_voltages_reg)-(2*sizeof(read_voltages_reg[0])) );
 			HAL_Delay(5); //Delay 5ms to allow memcpy completion
 		}
 
-		LTC_nCS_High(); //Pull CS high
 	}
 
 	return ret;
