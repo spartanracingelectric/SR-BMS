@@ -1,0 +1,105 @@
+.App-Header
+{
+	height: 10vh;
+	display: flex;
+	flex-direction: row;
+	background-color: darkblue;
+}
+
+.Logo
+{
+	width: 30%;
+	height: 90%;
+	display: flex;
+	list-style: none;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.Title-Logo
+{
+	width: 35%;
+	height: 40%;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+}
+
+.Settings
+{
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: right;
+	justify-content: center;
+	color: white;
+
+	padding-right: 2%;
+}
+
+.Settings-Logo
+{
+	flex: 1;
+	min-width: 117.5vh;
+	height: 10%;
+
+	padding-bottom: 1%;
+	padding-top: 1%;
+	
+	font-size: 140%;
+	font-weight: bold;
+	font-family: 'sans-serif';
+	text-align: right;
+}
+
+.Tabs
+{
+	flex: 2;
+	height: 10vh;
+	
+	display: flex;
+	list-style: none;
+	flex-direction: row-reverse;
+	text-align: right;
+	font-size: 15px;
+	font-weight: 110%;
+}
+
+.Tabs a
+{
+	text-decoration: none;
+	color: inherit;
+}
+
+.General
+{
+	width: 8%;
+	list-style: none;
+}
+
+.General:hover
+{
+	color: yellow;
+	font-weight: bold;
+}
+
+.CellManagement
+{
+	width: 15%;
+}
+
+.Switch
+{
+	width: 10%;
+}
+
+.Signals
+{
+	width: 10%;
+}
+
+.Display
+{
+	width: 8%;
+}
