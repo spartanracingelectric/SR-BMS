@@ -44,7 +44,7 @@
 #define NUM_SERIES_GROUPS_PER_MOD_DEFAULT	12	//12 in series
 #define NUM_SERIES_GROUPS_TOTAL_DEFAULT		(NUM_DEVICES_DEFAULT * NUM_SERIES_GROUPS_PER_MOD_DEFAULT) //24 series groups
 
-#define LTC_DELAY_MS			1000 //1000ms update delay
+#define LTC_DELAY_MS			500 //500ms update delay
 #define LED_HEARTBEAT_DELAY_MS	500 //500ms update delay
 
 /* USER CODE END PD */
@@ -177,7 +177,7 @@ int main(void)
 			strncat(out_buf, char_to_str_pre, 1);
 			for (uint8_t i = 0; i < NUM_SERIES_GROUPS_TOTAL_DEFAULT; i++) {
 				// sprintf(buf, "C%u:%u/1000 V", i+1, read_val[i]);
-				sprintf(buf, "c%u:%u,", i+1, read_val[i]);
+				sprintf(buf, "c%u=%u,", i+1, read_val[i]);
 				strncat(out_buf, buf, 20);
 			}
 			char_to_str_post[0] = '@'; //End delimiter for voltage
