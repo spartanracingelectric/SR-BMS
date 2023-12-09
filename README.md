@@ -2,6 +2,10 @@
 A senior project with a goal to produce an in-house BMS using the LTC6813 to support a 600V pack, as well as analysis software to view cell data and configure the BMS.<br/>
 <br/>
 
+## Project Demonstration
+[![YouTube Video of Project Demo](https://img.youtube.com/vi/ieQdnhzClfs/0.jpg)](https://www.youtube.com/watch?v=ieQdnhzClfs)
+
+
 ## Project Folder Structure
 - `altium/` : Altium Designer project files for the custom BMS master and slave PCB (schematic & layout)
 - `doc/` : Supplementary documentation, mostly hardware-related (like datasheets)
@@ -45,5 +49,6 @@ _Abegail Palad_, Project Member, Firmware & Software<br/>
 <br/>
 
 ## Links
-[Spartan Racing Website](https://www.sjsuformulasae.com/)<br/>
+[Primary Repo for BMS Senior Project](https://github.com/spartanracingelectric/SR-BMS)<br/>
 [Old GUI Analysis Software Repo](https://github.com/Sensei-Josh/Senior_project_GUI)<br/>
+[Spartan Racing Website](https://www.sjsuformulasae.com/)<br/>
