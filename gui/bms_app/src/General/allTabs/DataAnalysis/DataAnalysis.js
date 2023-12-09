@@ -8,6 +8,8 @@ let initialData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let cellGroups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const url1 = "http://localhost:8000/graphdata";
 
+const REFRESH_RATE = 500; //500 ms
+
 function DataAnalysis() {
 
 	//holds string value fetched from server 8000 from server.js in serial comm
@@ -83,7 +85,8 @@ function DataAnalysis() {
 
 	useEffect(() => {
 		//Implementing the setInterval method
-		const interval = setInterval(Refresh, 3000);
+
+		const interval = setInterval(Refresh, REFRESH_RATE);
 
 		//Clearing the interval
 		return () => clearInterval(interval);
@@ -136,13 +139,16 @@ function DataAnalysis() {
       		const obj = JSON.stringify(result, null, 4);
       		//setMessage(obj);
       		const arr = JSON.parse(obj);
-      		
+
 			setVdata(arr.volt);
       		setTdata(arr.temp);
       		setIdata(arr.curr);
 			setData(arr.static);
 			UpdateView();
 	}
+
+	// Update total voltage
+	BData[0] = parseFloat(Vdata.reduce((partialSum, a) => partialSum + a, 0)).toFixed(2);
 
 	return (
 		<div className = "BDA">
